@@ -5,7 +5,7 @@
 # %% auto #0
 __all__ = ['render_token', 'render_end_token', 'render_token_grid']
 
-# %% ../../nbs/components/tokens.ipynb #19b6ea95
+# %% ../../nbs/components/tokens.ipynb #99d42647
 from typing import Any, Callable, List, Optional
 
 from fasthtml.common import Div, Span
@@ -31,7 +31,7 @@ from ..core.config import TokenSelectorConfig
 from ..core.models import Token, TokenRenderContext, TokenSelectorState
 from ..core.html_ids import TokenSelectorHtmlIds
 
-# %% ../../nbs/components/tokens.ipynb #e7814141
+# %% ../../nbs/components/tokens.ipynb #0df5a9a9
 def _is_token_selected(
     index:int,              # token index
     mode:str,               # selection mode
@@ -48,7 +48,7 @@ def _is_token_selected(
         return lo <= index <= hi
     return False
 
-# %% ../../nbs/components/tokens.ipynb #5832bbed
+# %% ../../nbs/components/tokens.ipynb #2b37bdad
 def _build_token_render_context(
     token:Token,                    # token being rendered
     mode:str,                       # selection mode
@@ -64,12 +64,12 @@ def _build_token_render_context(
         selection_mode=mode,
     )
 
-# %% ../../nbs/components/tokens.ipynb #aea52523
+# %% ../../nbs/components/tokens.ipynb #cd35fb5a
 def _render_caret_indicator() -> Any:  # caret indicator Div element
     """Render the pulsing caret indicator bar."""
     return Div(cls=CARET_INDICATOR_CLS)
 
-# %% ../../nbs/components/tokens.ipynb #34417832
+# %% ../../nbs/components/tokens.ipynb #a7c9db4c
 def render_token(
     token:Token,                                      # token to render
     config:TokenSelectorConfig,                       # config for this instance
@@ -136,10 +136,10 @@ def render_token(
         onclick=onclick,
     )
 
-# %% ../../nbs/components/tokens.ipynb #0a5d9bc7
+# %% ../../nbs/components/tokens.ipynb #91bd40f4
 from cjm_fasthtml_daisyui.utilities.semantic_colors import text_dui
 
-# %% ../../nbs/components/tokens.ipynb #2e75d14e
+# %% ../../nbs/components/tokens.ipynb #efb4515f
 def render_end_token(
     config:TokenSelectorConfig,                 # config for this instance
     ids:TokenSelectorHtmlIds,                   # HTML IDs
@@ -181,7 +181,7 @@ def render_end_token(
         onclick=onclick,
     )
 
-# %% ../../nbs/components/tokens.ipynb #be5cff68
+# %% ../../nbs/components/tokens.ipynb #8b429b4b
 def render_token_grid(
     tokens:List[Token],                               # token list to render
     config:TokenSelectorConfig,                       # config for this instance

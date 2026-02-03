@@ -5,14 +5,14 @@
 # %% auto #0
 __all__ = ['generate_display_js']
 
-# %% ../../nbs/js/display.ipynb #7aadfa96
+# %% ../../nbs/js/display.ipynb #4614e222
 from cjm_fasthtml_token_selector.core.constants import (
     CARET_INDICATOR_CLS, OPACITY_50_CLS, HIGHLIGHT_CLS,
 )
 from ..core.config import TokenSelectorConfig
 from ..core.html_ids import TokenSelectorHtmlIds
 
-# %% ../../nbs/js/display.ipynb #39321ea6
+# %% ../../nbs/js/display.ipynb #85e3702e
 def _generate_update_inputs_js(
     ids:TokenSelectorHtmlIds,  # HTML IDs
 ) -> str:  # JS code fragment
@@ -26,7 +26,7 @@ def _generate_update_inputs_js(
     }};
 """
 
-# %% ../../nbs/js/display.ipynb #9146e695
+# %% ../../nbs/js/display.ipynb #9c85ab30
 def _generate_gap_display_js(
     ids:TokenSelectorHtmlIds,  # HTML IDs
 ) -> str:  # JS code fragment
@@ -66,7 +66,7 @@ def _generate_gap_display_js(
     }};
 """
 
-# %% ../../nbs/js/display.ipynb #200adb1b
+# %% ../../nbs/js/display.ipynb #90b62704
 def _generate_word_display_js(
     ids:TokenSelectorHtmlIds,  # HTML IDs
 ) -> str:  # JS code fragment
@@ -92,7 +92,7 @@ def _generate_word_display_js(
     }};
 """
 
-# %% ../../nbs/js/display.ipynb #68f90631
+# %% ../../nbs/js/display.ipynb #f3f54861
 def _generate_span_display_js(
     ids:TokenSelectorHtmlIds,  # HTML IDs
 ) -> str:  # JS code fragment
@@ -131,7 +131,7 @@ def _generate_span_display_js(
     }};
 """
 
-# %% ../../nbs/js/display.ipynb #10e67220
+# %% ../../nbs/js/display.ipynb #c782dde5
 def generate_display_js(
     config:TokenSelectorConfig,  # config for this instance
     ids:TokenSelectorHtmlIds,    # HTML IDs

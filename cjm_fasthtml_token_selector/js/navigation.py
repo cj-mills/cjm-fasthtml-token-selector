@@ -5,11 +5,11 @@
 # %% auto #0
 __all__ = ['generate_navigation_js']
 
-# %% ../../nbs/js/navigation.ipynb #e8275264
+# %% ../../nbs/js/navigation.ipynb #386f20ca
 from ..core.config import TokenSelectorConfig
 from ..core.html_ids import TokenSelectorHtmlIds
 
-# %% ../../nbs/js/navigation.ipynb #b83a7745
+# %% ../../nbs/js/navigation.ipynb #7146756c
 def _generate_gap_nav_js(
     config:TokenSelectorConfig,  # config for this instance
     ids:TokenSelectorHtmlIds,    # HTML IDs
@@ -68,7 +68,7 @@ def _generate_gap_nav_js(
     }};
 """
 
-# %% ../../nbs/js/navigation.ipynb #83f9d1d4
+# %% ../../nbs/js/navigation.ipynb #4ef3a24d
 def _generate_word_nav_js(
     config:TokenSelectorConfig,  # config for this instance
     ids:TokenSelectorHtmlIds,    # HTML IDs
@@ -127,7 +127,7 @@ def _generate_word_nav_js(
     }};
 """
 
-# %% ../../nbs/js/navigation.ipynb #fedb510c
+# %% ../../nbs/js/navigation.ipynb #7a3c234e
 def _generate_span_nav_js(
     config:TokenSelectorConfig,  # config for this instance
     ids:TokenSelectorHtmlIds,    # HTML IDs
@@ -213,7 +213,7 @@ def _generate_span_nav_js(
     }};
 """
 
-# %% ../../nbs/js/navigation.ipynb #3833b252
+# %% ../../nbs/js/navigation.ipynb #eb0cbbbb
 def generate_navigation_js(
     config:TokenSelectorConfig,  # config for this instance
     ids:TokenSelectorHtmlIds,    # HTML IDs

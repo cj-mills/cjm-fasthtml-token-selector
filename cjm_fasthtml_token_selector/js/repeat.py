@@ -5,10 +5,10 @@
 # %% auto #0
 __all__ = ['generate_key_repeat_js']
 
-# %% ../../nbs/js/repeat.ipynb #dad4614a
+# %% ../../nbs/js/repeat.ipynb #684c3b7a
 from ..core.config import TokenSelectorConfig
 
-# %% ../../nbs/js/repeat.ipynb #5dc66255
+# %% ../../nbs/js/repeat.ipynb #b02029c9
 def _generate_movement_dispatch_js(
     config:TokenSelectorConfig,  # config for this instance
 ) -> str:  # JS code fragment for the movement dispatcher
@@ -43,7 +43,7 @@ def _generate_movement_dispatch_js(
     }};
 """
 
-# %% ../../nbs/js/repeat.ipynb #142f1fee
+# %% ../../nbs/js/repeat.ipynb #0122283a
 def generate_key_repeat_js(
     config:TokenSelectorConfig,  # config with timing settings
 ) -> str:  # JS code fragment for the IIFE

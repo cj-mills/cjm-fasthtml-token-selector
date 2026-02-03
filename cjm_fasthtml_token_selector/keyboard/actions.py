@@ -6,7 +6,7 @@
 __all__ = ['create_token_selector_mode', 'create_token_nav_actions', 'build_token_selector_url_map',
            'render_token_action_buttons']
 
-# %% ../../nbs/keyboard/actions.ipynb #85b78794
+# %% ../../nbs/keyboard/actions.ipynb #9cae2c4c
 from typing import Any, Dict, Tuple
 
 from fasthtml.common import Div, Button, Hidden
@@ -20,7 +20,7 @@ from ..core.config import TokenSelectorConfig
 from ..core.html_ids import TokenSelectorHtmlIds
 from ..js.core import global_callback_name
 
-# %% ../../nbs/keyboard/actions.ipynb #3f010e89
+# %% ../../nbs/keyboard/actions.ipynb #a1223d9d
 def create_token_selector_mode(
     config:TokenSelectorConfig,         # config for this instance
     mode_name:str = "token-select",     # mode name for the keyboard nav system
@@ -38,7 +38,7 @@ def create_token_selector_mode(
         exit_on_zone_change=exit_on_zone_change,
     )
 
-# %% ../../nbs/keyboard/actions.ipynb #c6d39435
+# %% ../../nbs/keyboard/actions.ipynb #464fca0c
 def create_token_nav_actions(
     config:TokenSelectorConfig,           # config for this instance
     zone_id:str,                          # focus zone ID
@@ -107,7 +107,7 @@ def create_token_nav_actions(
 
     return tuple(actions)
 
-# %% ../../nbs/keyboard/actions.ipynb #31859705
+# %% ../../nbs/keyboard/actions.ipynb #8b6a950a
 def build_token_selector_url_map(
     confirm_button_id:str,  # button ID for confirm action
     cancel_button_id:str,   # button ID for cancel action
@@ -122,7 +122,7 @@ def build_token_selector_url_map(
         url_map[cancel_button_id] = cancel_url
     return url_map
 
-# %% ../../nbs/keyboard/actions.ipynb #2e20ce6e
+# %% ../../nbs/keyboard/actions.ipynb #039e1b6e
 def render_token_action_buttons(
     confirm_button_id:str,          # button ID for confirm
     cancel_button_id:str,           # button ID for cancel

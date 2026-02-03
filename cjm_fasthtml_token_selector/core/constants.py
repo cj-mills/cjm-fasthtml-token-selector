@@ -7,10 +7,10 @@ __all__ = ['SelectionMode', 'OPACITY_50_CLS', 'CARET_INDICATOR_CLS', 'HIGHLIGHT_
            'DEFAULT_REPEAT_INTERVAL', 'DEFAULT_THROTTLE_FLOOR', 'DEFAULT_LEFT_KEY', 'DEFAULT_RIGHT_KEY',
            'DEFAULT_END_TOKEN_TEXT']
 
-# %% ../../nbs/core/constants.ipynb #df733a6c
+# %% ../../nbs/core/constants.ipynb #2309118c
 from typing import Literal
 
-# %% ../../nbs/core/constants.ipynb #8638b95e
+# %% ../../nbs/core/constants.ipynb #a026c6f9
 from cjm_fasthtml_daisyui.utilities.semantic_colors import bg_dui
 
 from cjm_fasthtml_tailwind.utilities.sizing import w, h
@@ -20,13 +20,13 @@ from cjm_fasthtml_tailwind.utilities.transitions_and_animation import animate
 from cjm_fasthtml_tailwind.utilities.transforms import translate
 from cjm_fasthtml_tailwind.core.base import combine_classes
 
-# %% ../../nbs/core/constants.ipynb #37782140
+# %% ../../nbs/core/constants.ipynb #07b9f913
 SelectionMode = Literal["gap", "word", "span"]
 
-# %% ../../nbs/core/constants.ipynb #3768030b
+# %% ../../nbs/core/constants.ipynb #717f0741
 OPACITY_50_CLS = str(opacity(50))
 
-# %% ../../nbs/core/constants.ipynb #03b881be
+# %% ../../nbs/core/constants.ipynb #75b65c24
 CARET_INDICATOR_CLS = combine_classes(
     "caret-indicator",
     w(0.5), h(5), bg_dui.error,
@@ -34,17 +34,17 @@ CARET_INDICATOR_CLS = combine_classes(
     animate.pulse
 )
 
-# %% ../../nbs/core/constants.ipynb #e532f007
+# %% ../../nbs/core/constants.ipynb #c2f02ac7
 HIGHLIGHT_CLS = str(bg_dui.primary.opacity(20))
 
-# %% ../../nbs/core/constants.ipynb #bbd5f285
+# %% ../../nbs/core/constants.ipynb #ba9f3ddf
 DEFAULT_INITIAL_DELAY:int = 400   # ms before first repeat
 DEFAULT_REPEAT_INTERVAL:int = 80  # ms between repeats
 DEFAULT_THROTTLE_FLOOR:int = 50   # minimum ms between movements
 
-# %% ../../nbs/core/constants.ipynb #0eff67fe
+# %% ../../nbs/core/constants.ipynb #472a38eb
 DEFAULT_LEFT_KEY:str = "ArrowLeft"
 DEFAULT_RIGHT_KEY:str = "ArrowRight"
 
-# %% ../../nbs/core/constants.ipynb #439ee8a2
+# %% ../../nbs/core/constants.ipynb #9fee5792
 DEFAULT_END_TOKEN_TEXT:str = "(End)"

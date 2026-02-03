@@ -5,7 +5,7 @@
 # %% auto #0
 __all__ = ['global_callback_name', 'generate_token_selector_js']
 
-# %% ../../nbs/js/core.ipynb #f7b0f800
+# %% ../../nbs/js/core.ipynb #3dd234c7
 from typing import Any, Tuple
 
 from fasthtml.common import Script
@@ -17,7 +17,7 @@ from .navigation import generate_navigation_js
 from .display import generate_display_js
 from .repeat import generate_key_repeat_js
 
-# %% ../../nbs/js/core.ipynb #18820c72
+# %% ../../nbs/js/core.ipynb #bee1f126
 _GLOBAL_CALLBACKS = (
     "activate",
     "deactivate",
@@ -35,7 +35,7 @@ def global_callback_name(
     """Generate a prefix-unique global callback name."""
     return f"{prefix}_{callback}"
 
-# %% ../../nbs/js/core.ipynb #bd90c5f9
+# %% ../../nbs/js/core.ipynb #173e8f33
 def _generate_state_init_js(
     config:TokenSelectorConfig,  # config for this instance
     state:TokenSelectorState,    # initial state
@@ -51,7 +51,7 @@ def _generate_state_init_js(
     ns._prevAnchor = -1;
 """
 
-# %% ../../nbs/js/core.ipynb #eaa4d274
+# %% ../../nbs/js/core.ipynb #94cc4f28
 def _generate_on_change_js(
     config:TokenSelectorConfig,  # config for this instance
 ) -> str:  # JS code fragment
@@ -68,7 +68,7 @@ def _generate_on_change_js(
     ns._fireOnChange = function() {};
 """
 
-# %% ../../nbs/js/core.ipynb #dfb8e080
+# %% ../../nbs/js/core.ipynb #0089ec56
 def _generate_activation_js(
     config:TokenSelectorConfig,  # config for this instance
     ids:TokenSelectorHtmlIds,    # HTML IDs
@@ -105,7 +105,7 @@ def _generate_activation_js(
     }};
 """
 
-# %% ../../nbs/js/core.ipynb #62a51101
+# %% ../../nbs/js/core.ipynb #d62a060d
 def _generate_global_callbacks_js(
     config:TokenSelectorConfig,  # config for this instance
 ) -> str:  # JS code fragment
@@ -119,7 +119,7 @@ def _generate_global_callbacks_js(
         )
     return "\n".join(lines)
 
-# %% ../../nbs/js/core.ipynb #a184eb66
+# %% ../../nbs/js/core.ipynb #111900aa
 def _generate_settle_handler_js(
     config:TokenSelectorConfig,  # config for this instance
     ids:TokenSelectorHtmlIds,    # HTML IDs
@@ -141,7 +141,7 @@ def _generate_settle_handler_js(
     }}
 """
 
-# %% ../../nbs/js/core.ipynb #ffedfe9e
+# %% ../../nbs/js/core.ipynb #48c0e44b
 def generate_token_selector_js(
     config:TokenSelectorConfig,              # config for this instance
     ids:TokenSelectorHtmlIds,                # HTML IDs

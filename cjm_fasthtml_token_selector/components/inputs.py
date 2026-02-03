@@ -5,7 +5,7 @@
 # %% auto #0
 __all__ = ['render_hidden_inputs', 'build_include_selector']
 
-# %% ../../nbs/components/inputs.ipynb #d67b5a45
+# %% ../../nbs/components/inputs.ipynb #330fdfc6
 from typing import Any, Optional, Tuple
 
 from fasthtml.common import Div, Hidden
@@ -13,7 +13,7 @@ from fasthtml.common import Div, Hidden
 from ..core.models import TokenSelectorState
 from ..core.html_ids import TokenSelectorHtmlIds
 
-# %% ../../nbs/components/inputs.ipynb #705a36d4
+# %% ../../nbs/components/inputs.ipynb #2ebc5b73
 def render_hidden_inputs(
     ids:TokenSelectorHtmlIds,                   # HTML IDs for this instance
     state:Optional[TokenSelectorState] = None,  # current state
@@ -38,7 +38,7 @@ def render_hidden_inputs(
 
     return (anchor_input, focus_input)
 
-# %% ../../nbs/components/inputs.ipynb #4992bf46
+# %% ../../nbs/components/inputs.ipynb #bd8bb783
 def build_include_selector(
     ids:TokenSelectorHtmlIds,  # HTML IDs for this instance
 ) -> str:  # CSS selector string for hx_include

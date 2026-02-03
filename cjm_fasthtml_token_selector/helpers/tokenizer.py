@@ -5,12 +5,12 @@
 # %% auto #0
 __all__ = ['count_tokens', 'get_token_list', 'token_index_to_char_position', 'tokenize']
 
-# %% ../../nbs/helpers/tokenizer.ipynb #40430ded
+# %% ../../nbs/helpers/tokenizer.ipynb #c161bb62
 from typing import Any, List, Optional, Union
 
 from ..core.models import Token
 
-# %% ../../nbs/helpers/tokenizer.ipynb #3f1d1248
+# %% ../../nbs/helpers/tokenizer.ipynb #1cded653
 def count_tokens(
     text:str,  # text to count tokens in
 ) -> int:  # token count
@@ -19,7 +19,7 @@ def count_tokens(
         return 0
     return len(text.split())
 
-# %% ../../nbs/helpers/tokenizer.ipynb #6d01d61e
+# %% ../../nbs/helpers/tokenizer.ipynb #71f880db
 def get_token_list(
     text:str,  # text to split into tokens
 ) -> List[str]:  # list of token strings
@@ -28,7 +28,7 @@ def get_token_list(
         return []
     return text.split()
 
-# %% ../../nbs/helpers/tokenizer.ipynb #6bb753c0
+# %% ../../nbs/helpers/tokenizer.ipynb #b0f6d4c0
 def token_index_to_char_position(
     text:str,         # full text string
     token_index:int,  # 0-based token index
@@ -54,7 +54,7 @@ def token_index_to_char_position(
 
     return pos
 
-# %% ../../nbs/helpers/tokenizer.ipynb #a3e115ab
+# %% ../../nbs/helpers/tokenizer.ipynb #c4c9d469
 def tokenize(
     text_or_tokens:Union[str, List[str]],  # raw text string or pre-tokenized list
     metadata:Optional[List[Any]] = None,   # per-token metadata (must match token count)

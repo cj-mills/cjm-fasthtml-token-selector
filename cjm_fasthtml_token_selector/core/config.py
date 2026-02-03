@@ -5,7 +5,7 @@
 # %% auto #0
 __all__ = ['TokenSelectorConfig']
 
-# %% ../../nbs/core/config.ipynb #f6ca037a
+# %% ../../nbs/core/config.ipynb #4904f597
 from dataclasses import dataclass, field
 
 from cjm_fasthtml_token_selector.core.constants import (
@@ -14,7 +14,7 @@ from cjm_fasthtml_token_selector.core.constants import (
     DEFAULT_LEFT_KEY, DEFAULT_RIGHT_KEY, DEFAULT_END_TOKEN_TEXT,
 )
 
-# %% ../../nbs/core/config.ipynb #ac2efec9
+# %% ../../nbs/core/config.ipynb #4f3321a9
 _prefix_counter:int = 0
 
 def _auto_prefix() -> str: # unique prefix string
@@ -29,7 +29,7 @@ def _reset_prefix_counter() -> None:
     global _prefix_counter
     _prefix_counter = 0
 
-# %% ../../nbs/core/config.ipynb #1e20b437
+# %% ../../nbs/core/config.ipynb #2ac6669d
 @dataclass
 class TokenSelectorConfig:
     """Initialization-time settings for a token selector instance."""

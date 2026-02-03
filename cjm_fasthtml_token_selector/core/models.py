@@ -5,11 +5,11 @@
 # %% auto #0
 __all__ = ['Token', 'TokenRenderContext', 'TokenSelectorState']
 
-# %% ../../nbs/core/models.ipynb #5c47a654
+# %% ../../nbs/core/models.ipynb #cd8f9e39
 from dataclasses import dataclass, field
 from typing import Any, Optional
 
-# %% ../../nbs/core/models.ipynb #7a3b8196
+# %% ../../nbs/core/models.ipynb #1a22b1bf
 @dataclass
 class Token:
     """A single token in the token grid."""
@@ -17,7 +17,7 @@ class Token:
     index:int       # 0-based position in the token list
     metadata:Any = None  # optional consumer metadata per token
 
-# %% ../../nbs/core/models.ipynb #f9315d6f
+# %% ../../nbs/core/models.ipynb #a8270e15
 @dataclass
 class TokenRenderContext:
     """Context passed to per-token styling callbacks."""
@@ -27,7 +27,7 @@ class TokenRenderContext:
     is_focus:bool      # whether this token is at the focus position
     selection_mode:str  # current selection mode
 
-# %% ../../nbs/core/models.ipynb #7023d18a
+# %% ../../nbs/core/models.ipynb #84e86d0a
 @dataclass
 class TokenSelectorState:
     """Mutable runtime state for a token selector instance."""

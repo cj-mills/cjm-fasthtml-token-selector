@@ -5,10 +5,10 @@
 # %% auto #0
 __all__ = ['TokenSelectorHtmlIds']
 
-# %% ../../nbs/core/html_ids.ipynb #6f0ce5a8
+# %% ../../nbs/core/html_ids.ipynb #00fedd76
 from dataclasses import dataclass
 
-# %% ../../nbs/core/html_ids.ipynb #562b7868
+# %% ../../nbs/core/html_ids.ipynb #24a81661
 @dataclass
 class TokenSelectorHtmlIds:
     """Prefix-based HTML ID generator for token selector DOM elements."""
