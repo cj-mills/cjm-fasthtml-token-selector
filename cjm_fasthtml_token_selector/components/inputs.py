@@ -18,7 +18,7 @@ def render_hidden_inputs(
     ids:TokenSelectorHtmlIds,                   # HTML IDs for this instance
     state:Optional[TokenSelectorState] = None,  # current state
     oob:bool = False,                           # render with hx-swap-oob
-) -> Any:  # Div containing anchor and focus hidden inputs
+) -> Any:  # tuple of anchor and focus hidden inputs
     """Render hidden inputs for HTMX form submission."""
     anchor = state.anchor if state else 0
     focus = state.focus if state else 0
@@ -26,13 +26,13 @@ def render_hidden_inputs(
     anchor_input = Hidden(
         value=str(anchor),
         id=ids.anchor_input,
-        name=ids.anchor_input,
+        name=ids.anchor_name,
         **(dict(hx_swap_oob="true") if oob else {}),
     )
     focus_input = Hidden(
         value=str(focus),
         id=ids.focus_input,
-        name=ids.focus_input,
+        name=ids.focus_name,
         **(dict(hx_swap_oob="true") if oob else {}),
     )
 

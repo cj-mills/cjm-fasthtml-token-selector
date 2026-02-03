@@ -25,14 +25,24 @@ class TokenSelectorHtmlIds:
         return f"{self.prefix}-token-grid"
 
     @property
-    def anchor_input(self) -> str:  # hidden input for anchor position
-        """Hidden input for anchor position."""
+    def anchor_input(self) -> str:  # hidden input ID for anchor position
+        """Hidden input ID for anchor position (hyphenated, for CSS selectors)."""
         return f"{self.prefix}-anchor"
 
     @property
-    def focus_input(self) -> str:  # hidden input for focus position
-        """Hidden input for focus position."""
+    def focus_input(self) -> str:  # hidden input ID for focus position
+        """Hidden input ID for focus position (hyphenated, for CSS selectors)."""
         return f"{self.prefix}-focus"
+
+    @property
+    def anchor_name(self) -> str:  # form field name for anchor position
+        """Form field name for anchor position (underscored, for Python kwargs)."""
+        return f"{self.prefix}_anchor"
+
+    @property
+    def focus_name(self) -> str:  # form field name for focus position
+        """Form field name for focus position (underscored, for Python kwargs)."""
+        return f"{self.prefix}_focus"
 
     def token(self,
               index:int,  # token position index

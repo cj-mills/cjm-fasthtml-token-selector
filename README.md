@@ -51,27 +51,27 @@ graph LR
 
     components_inputs --> core_models
     components_inputs --> core_html_ids
-    components_tokens --> core_config
     components_tokens --> core_models
-    components_tokens --> core_html_ids
     components_tokens --> core_constants
+    components_tokens --> core_config
+    components_tokens --> core_html_ids
     components_tokens --> helpers_tokenizer
     core_config --> core_constants
     helpers_tokenizer --> core_models
-    js_core --> core_config
     js_core --> core_models
-    js_core --> js_display
-    js_core --> js_navigation
     js_core --> js_repeat
     js_core --> core_html_ids
-    js_display --> core_config
-    js_display --> core_html_ids
+    js_core --> core_config
+    js_core --> js_navigation
+    js_core --> js_display
     js_display --> core_constants
-    js_navigation --> core_config
+    js_display --> core_html_ids
+    js_display --> core_config
     js_navigation --> core_html_ids
+    js_navigation --> core_config
     js_repeat --> core_config
-    keyboard_actions --> core_config
     keyboard_actions --> core_html_ids
+    keyboard_actions --> core_config
     keyboard_actions --> js_core
 ```
 
@@ -403,25 +403,41 @@ class TokenSelectorHtmlIds:
             return f"{self.prefix}-token-grid"
     
         @property
-        def anchor_input(self) -> str:  # hidden input for anchor position
+        def anchor_input(self) -> str:  # hidden input ID for anchor position
         "Flex-wrap token container."
     
-    def anchor_input(self) -> str:  # hidden input for anchor position
-            """Hidden input for anchor position."""
+    def anchor_input(self) -> str:  # hidden input ID for anchor position
+            """Hidden input ID for anchor position (hyphenated, for CSS selectors)."""
             return f"{self.prefix}-anchor"
     
         @property
-        def focus_input(self) -> str:  # hidden input for focus position
-        "Hidden input for anchor position."
+        def focus_input(self) -> str:  # hidden input ID for focus position
+        "Hidden input ID for anchor position (hyphenated, for CSS selectors)."
     
-    def focus_input(self) -> str:  # hidden input for focus position
-            """Hidden input for focus position."""
+    def focus_input(self) -> str:  # hidden input ID for focus position
+            """Hidden input ID for focus position (hyphenated, for CSS selectors)."""
             return f"{self.prefix}-focus"
+    
+        @property
+        def anchor_name(self) -> str:  # form field name for anchor position
+        "Hidden input ID for focus position (hyphenated, for CSS selectors)."
+    
+    def anchor_name(self) -> str:  # form field name for anchor position
+            """Form field name for anchor position (underscored, for Python kwargs)."""
+            return f"{self.prefix}_anchor"
+    
+        @property
+        def focus_name(self) -> str:  # form field name for focus position
+        "Form field name for anchor position (underscored, for Python kwargs)."
+    
+    def focus_name(self) -> str:  # form field name for focus position
+            """Form field name for focus position (underscored, for Python kwargs)."""
+            return f"{self.prefix}_focus"
     
         def token(self,
                   index:int,  # token position index
                  ) -> str:  # individual token span ID
-        "Hidden input for focus position."
+        "Form field name for focus position (underscored, for Python kwargs)."
     
     def token(self,
                   index:int,  # token position index
@@ -449,7 +465,7 @@ def render_hidden_inputs(
     ids:TokenSelectorHtmlIds,                   # HTML IDs for this instance
     state:Optional[TokenSelectorState] = None,  # current state
     oob:bool = False,                           # render with hx-swap-oob
-) -> Any:  # Div containing anchor and focus hidden inputs
+) -> Any:  # tuple of anchor and focus hidden inputs
     "Render hidden inputs for HTMX form submission."
 ```
 
