@@ -1,0 +1,9 @@
+project:
+  output-dir: _docs
+
+website:
+  title: "cjm-fasthtml-token-selector"
+  site-url: "https://cj-mills.github.io/cjm-fasthtml-token-selector"
+  description: "A token-level interactive text selector for FastHTML with gap, word, and span selection modes, custom key repeat navigation, and HTMX state sync."
+  repo-branch: main
+  repo-url: "https://github.com/cj-mills/cjm-fasthtml-token-selector"
