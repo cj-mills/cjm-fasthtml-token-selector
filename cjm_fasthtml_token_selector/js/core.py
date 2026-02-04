@@ -124,21 +124,28 @@ def _generate_settle_handler_js(
     config:TokenSelectorConfig,  # config for this instance
     ids:TokenSelectorHtmlIds,    # HTML IDs
 ) -> str:  # JS code fragment
-    """Generate htmx:afterSettle handler for swap resilience."""
-    guard = f"_tsMasterListener_{config.prefix}"
+    """Generate htmx:afterSettle handler for swap resilience.
+
+    Stores the handler reference globally and replaces it on
+    re-initialization to avoid stale closure references when
+    the IIFE re-runs after HTMX page transitions.
+    """
+    handler_key = f"_tsSettleHandler_{config.prefix}"
     return f"""
     // HTMX afterSettle: re-read word count and update display
-    if (!window['{guard}']) {{
-        window['{guard}'] = true;
-        document.body.addEventListener('htmx:afterSettle', function() {{
-            var grid = document.getElementById('{ids.token_grid}');
-            if (grid && ns.active) {{
-                ns.wordCount = parseInt(grid.dataset.wordCount) || 0;
-                ns.updateDisplay();
-                ns.updateInputs();
-            }}
-        }});
+    // Replace old handler to avoid stale closure references
+    if (window['{handler_key}']) {{
+        document.body.removeEventListener('htmx:afterSettle', window['{handler_key}']);
     }}
+    window['{handler_key}'] = function() {{
+        var grid = document.getElementById('{ids.token_grid}');
+        if (grid && ns.active) {{
+            ns.wordCount = parseInt(grid.dataset.wordCount) || 0;
+            ns.updateDisplay();
+            ns.updateInputs();
+        }}
+    }};
+    document.body.addEventListener('htmx:afterSettle', window['{handler_key}']);
 """
 
 # %% ../../nbs/js/core.ipynb #48c0e44b

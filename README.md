@@ -51,24 +51,24 @@ graph LR
 
     components_inputs --> core_models
     components_inputs --> core_html_ids
-    components_tokens --> core_models
     components_tokens --> core_constants
+    components_tokens --> core_models
     components_tokens --> core_config
     components_tokens --> core_html_ids
     components_tokens --> helpers_tokenizer
     core_config --> core_constants
     helpers_tokenizer --> core_models
+    js_core --> js_display
     js_core --> core_models
-    js_core --> js_repeat
     js_core --> core_html_ids
     js_core --> core_config
+    js_core --> js_repeat
     js_core --> js_navigation
-    js_core --> js_display
     js_display --> core_constants
     js_display --> core_html_ids
     js_display --> core_config
-    js_navigation --> core_html_ids
     js_navigation --> core_config
+    js_navigation --> core_html_ids
     js_repeat --> core_config
     keyboard_actions --> core_html_ids
     keyboard_actions --> core_config
@@ -299,7 +299,13 @@ def _generate_settle_handler_js(
     config:TokenSelectorConfig,  # config for this instance
     ids:TokenSelectorHtmlIds,    # HTML IDs
 ) -> str:  # JS code fragment
-    "Generate htmx:afterSettle handler for swap resilience."
+    """
+    Generate htmx:afterSettle handler for swap resilience.
+    
+    Stores the handler reference globally and replaces it on
+    re-initialization to avoid stale closure references when
+    the IIFE re-runs after HTMX page transitions.
+    """
 ```
 
 ``` python
