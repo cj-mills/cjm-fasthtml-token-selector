@@ -1,0 +1,1353 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="en" xml:lang="en"><head>
+
+<meta charset="utf-8">
+<meta name="generator" content="quarto-1.9.37">
+
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
+
+<meta name="description" content="A token-level interactive text selector for FastHTML with gap, word, and span selection modes, custom key repeat navigation, and HTMX state sync.">
+
+<title>cjm-fasthtml-token-selector</title>
+<style>
+/* Default styles provided by pandoc.
+** See https://pandoc.org/MANUAL.html#variables-for-html for config info.
+*/
+code{white-space: pre-wrap;}
+span.smallcaps{font-variant: small-caps;}
+div.columns{display: flex; gap: min(4vw, 1.5em);}
+div.column{flex: auto; overflow-x: auto;}
+div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+ul.task-list{list-style: none;}
+ul.task-list li input[type="checkbox"] {
+  width: 0.8em;
+  margin: 0 0.8em 0.2em -1em; /* quarto-specific, see https://github.com/quarto-dev/quarto-cli/issues/4556 */ 
+  vertical-align: middle;
+}
+/* CSS for syntax highlighting */
+html { -webkit-text-size-adjust: 100%; }
+pre > code.sourceCode { white-space: pre; position: relative; }
+pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+pre > code.sourceCode > span:empty { height: 1.2em; }
+.sourceCode { overflow: visible; }
+code.sourceCode > span { color: inherit; text-decoration: inherit; }
+div.sourceCode { margin: 1em 0; }
+pre.sourceCode { margin: 0; }
+@media screen {
+div.sourceCode { overflow: auto; }
+}
+@media print {
+pre > code.sourceCode { white-space: pre-wrap; }
+pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+}
+pre.numberSource code
+  { counter-reset: source-line 0; }
+pre.numberSource code > span
+  { position: relative; left: -4em; counter-increment: source-line; }
+pre.numberSource code > span > a:first-child::before
+  { content: counter(source-line);
+    position: relative; left: -1em; text-align: right; vertical-align: baseline;
+    border: none; display: inline-block;
+    -webkit-touch-callout: none; -webkit-user-select: none;
+    -khtml-user-select: none; -moz-user-select: none;
+    -ms-user-select: none; user-select: none;
+    padding: 0 4px; width: 4em;
+  }
+pre.numberSource { margin-left: 3em;  padding-left: 4px; }
+div.sourceCode
+  {   }
+@media screen {
+pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+}
+</style>
+
+
+<script src="site_libs/quarto-nav/quarto-nav.js"></script>
+<script src="site_libs/quarto-nav/headroom.min.js"></script>
+<script src="site_libs/clipboard/clipboard.min.js"></script>
+<script src="site_libs/quarto-search/autocomplete.umd.js"></script>
+<script src="site_libs/quarto-search/fuse.min.js"></script>
+<script src="site_libs/quarto-search/quarto-search.js"></script>
+<meta name="quarto:offset" content="./">
+<script src="site_libs/quarto-html/quarto.js" type="module"></script>
+<script src="site_libs/quarto-html/tabsets/tabsets.js" type="module"></script>
+<script src="site_libs/quarto-html/popper.min.js"></script>
+<script src="site_libs/quarto-html/tippy.umd.min.js"></script>
+<script src="site_libs/quarto-html/anchor.min.js"></script>
+<link href="site_libs/quarto-html/tippy.css" rel="stylesheet">
+<link href="site_libs/quarto-html/quarto-syntax-highlighting-7f8f88aac4f3542376d5c11b86a4c14d.css" rel="stylesheet" id="quarto-text-highlighting-styles">
+<script src="site_libs/bootstrap/bootstrap.min.js"></script>
+<link href="site_libs/bootstrap/bootstrap-icons.css" rel="stylesheet">
+<link href="site_libs/bootstrap/bootstrap-de52dc3353fe04aa4d07820b7139bd46.min.css" rel="stylesheet" append-hash="true" id="quarto-bootstrap" data-mode="light">
+<script id="quarto-search-options" type="application/json">{
+  "location": "navbar",
+  "copy-button": false,
+  "collapse-after": 3,
+  "panel-placement": "end",
+  "type": "overlay",
+  "limit": 50,
+  "keyboard-shortcut": [
+    "f",
+    "/",
+    "s"
+  ],
+  "show-item-context": false,
+  "language": {
+    "search-no-results-text": "No results",
+    "search-matching-documents-text": "matching documents",
+    "search-copy-link-title": "Copy link to search",
+    "search-hide-matches-text": "Hide additional matches",
+    "search-more-match-text": "more match in this document",
+    "search-more-matches-text": "more matches in this document",
+    "search-clear-button-title": "Clear",
+    "search-text-placeholder": "",
+    "search-detached-cancel-button-title": "Cancel",
+    "search-submit-button-title": "Submit",
+    "search-label": "Search"
+  }
+}</script>
+
+
+<link rel="stylesheet" href="styles.css">
+<meta property="og:title" content="cjm-fasthtml-token-selector">
+<meta property="og:description" content="A token-level interactive text selector for FastHTML with gap, word, and span selection modes, custom key repeat navigation, and HTMX state sync.">
+<meta property="og:site_name" content="cjm-fasthtml-token-selector">
+<meta name="twitter:title" content="cjm-fasthtml-token-selector">
+<meta name="twitter:description" content="A token-level interactive text selector for FastHTML with gap, word, and span selection modes, custom key repeat navigation, and HTMX state sync.">
+<meta name="twitter:card" content="summary">
+</head>
+
+<body class="nav-sidebar floating nav-fixed quarto-light">
+
+<div id="quarto-search-results"></div>
+  <header id="quarto-header" class="headroom fixed-top">
+    <nav class="navbar navbar-expand-lg " data-bs-theme="dark">
+      <div class="navbar-container container-fluid">
+      <div class="navbar-brand-container mx-auto">
+    <a class="navbar-brand" href="./index.html">
+    <span class="navbar-title">cjm-fasthtml-token-selector</span>
+    </a>
+  </div>
+        <div class="quarto-navbar-tools tools-end">
+</div>
+          <div id="quarto-search" class="" title="Search"></div>
+      </div> <!-- /container-fluid -->
+    </nav>
+  <nav class="quarto-secondary-nav">
+    <div class="container-fluid d-flex">
+      <button type="button" class="quarto-btn-toggle btn" data-bs-toggle="collapse" role="button" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">
+        <i class="bi bi-layout-text-sidebar-reverse"></i>
+      </button>
+        <nav class="quarto-page-breadcrumbs" aria-label="breadcrumb"><ol class="breadcrumb"><li class="breadcrumb-item"><a href="./index.html">cjm-fasthtml-token-selector</a></li></ol></nav>
+        <a class="flex-grow-1" role="navigation" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item" aria-controls="quarto-sidebar" aria-expanded="false" aria-label="Toggle sidebar navigation" onclick="if (window.quartoToggleHeadroom) { window.quartoToggleHeadroom(); }">      
+        </a>
+    </div>
+  </nav>
+</header>
+<!-- content -->
+<div id="quarto-content" class="quarto-container page-columns page-rows-contents page-layout-article page-navbar">
+<!-- sidebar -->
+  <nav id="quarto-sidebar" class="sidebar collapse collapse-horizontal quarto-sidebar-collapse-item sidebar-navigation floating overflow-auto">
+    <div class="sidebar-menu-container"> 
+    <ul class="list-unstyled mt-1">
+        <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./index.html" class="sidebar-item-text sidebar-link active">
+ <span class="menu-text">cjm-fasthtml-token-selector</span></a>
+  </div>
+</li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true">
+ <span class="menu-text">components</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-1" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-1" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./components/inputs.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Inputs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./components/tokens.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tokens</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true">
+ <span class="menu-text">core</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-2" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-2" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./core/config.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Config</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./core/constants.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Constants</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./core/html_ids.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">HTML IDs</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./core/models.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Models</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true">
+ <span class="menu-text">helpers</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-3" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-3" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./helpers/tokenizer.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Tokenizer</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true">
+ <span class="menu-text">js</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-4" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-4" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./js/core.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Core JS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./js/display.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Display JS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./js/navigation.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Navigation JS</span></a>
+  </div>
+</li>
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./js/repeat.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Key Repeat JS</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+        <li class="sidebar-item sidebar-item-section">
+      <div class="sidebar-item-container"> 
+            <a class="sidebar-item-text sidebar-link text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true">
+ <span class="menu-text">keyboard</span></a>
+          <a class="sidebar-item-toggle text-start" data-bs-toggle="collapse" data-bs-target="#quarto-sidebar-section-5" role="navigation" aria-expanded="true" aria-label="Toggle section">
+            <i class="bi bi-chevron-right ms-2"></i>
+          </a> 
+      </div>
+      <ul id="quarto-sidebar-section-5" class="collapse list-unstyled sidebar-section depth1 show">  
+          <li class="sidebar-item">
+  <div class="sidebar-item-container"> 
+  <a href="./keyboard/actions.html" class="sidebar-item-text sidebar-link">
+ <span class="menu-text">Keyboard Actions</span></a>
+  </div>
+</li>
+      </ul>
+  </li>
+    </ul>
+    </div>
+</nav>
+<div id="quarto-sidebar-glass" class="quarto-sidebar-collapse-item" data-bs-toggle="collapse" data-bs-target=".quarto-sidebar-collapse-item"></div>
+<!-- margin-sidebar -->
+    <div id="quarto-margin-sidebar" class="sidebar margin-sidebar">
+        <nav id="TOC" role="doc-toc" class="toc-active">
+    <h2 id="toc-title">On this page</h2>
+   
+  <ul>
+  <li><a href="#install" id="toc-install" class="nav-link active" data-scroll-target="#install">Install</a></li>
+  <li><a href="#project-structure" id="toc-project-structure" class="nav-link" data-scroll-target="#project-structure">Project Structure</a></li>
+  <li><a href="#module-dependencies" id="toc-module-dependencies" class="nav-link" data-scroll-target="#module-dependencies">Module Dependencies</a></li>
+  <li><a href="#cli-reference" id="toc-cli-reference" class="nav-link" data-scroll-target="#cli-reference">CLI Reference</a></li>
+  <li><a href="#module-overview" id="toc-module-overview" class="nav-link" data-scroll-target="#module-overview">Module Overview</a>
+  <ul class="collapse">
+  <li><a href="#keyboard-actions-actions.ipynb" id="toc-keyboard-actions-actions.ipynb" class="nav-link" data-scroll-target="#keyboard-actions-actions.ipynb">Keyboard Actions (<code>actions.ipynb</code>)</a></li>
+  <li><a href="#config-config.ipynb" id="toc-config-config.ipynb" class="nav-link" data-scroll-target="#config-config.ipynb">Config (<code>config.ipynb</code>)</a></li>
+  <li><a href="#constants-constants.ipynb" id="toc-constants-constants.ipynb" class="nav-link" data-scroll-target="#constants-constants.ipynb">Constants (<code>constants.ipynb</code>)</a></li>
+  <li><a href="#core-js-core.ipynb" id="toc-core-js-core.ipynb" class="nav-link" data-scroll-target="#core-js-core.ipynb">Core JS (<code>core.ipynb</code>)</a></li>
+  <li><a href="#display-js-display.ipynb" id="toc-display-js-display.ipynb" class="nav-link" data-scroll-target="#display-js-display.ipynb">Display JS (<code>display.ipynb</code>)</a></li>
+  <li><a href="#html-ids-html_ids.ipynb" id="toc-html-ids-html_ids.ipynb" class="nav-link" data-scroll-target="#html-ids-html_ids.ipynb">HTML IDs (<code>html_ids.ipynb</code>)</a></li>
+  <li><a href="#inputs-inputs.ipynb" id="toc-inputs-inputs.ipynb" class="nav-link" data-scroll-target="#inputs-inputs.ipynb">Inputs (<code>inputs.ipynb</code>)</a></li>
+  <li><a href="#models-models.ipynb" id="toc-models-models.ipynb" class="nav-link" data-scroll-target="#models-models.ipynb">Models (<code>models.ipynb</code>)</a></li>
+  <li><a href="#navigation-js-navigation.ipynb" id="toc-navigation-js-navigation.ipynb" class="nav-link" data-scroll-target="#navigation-js-navigation.ipynb">Navigation JS (<code>navigation.ipynb</code>)</a></li>
+  <li><a href="#key-repeat-js-repeat.ipynb" id="toc-key-repeat-js-repeat.ipynb" class="nav-link" data-scroll-target="#key-repeat-js-repeat.ipynb">Key Repeat JS (<code>repeat.ipynb</code>)</a></li>
+  <li><a href="#tokenizer-tokenizer.ipynb" id="toc-tokenizer-tokenizer.ipynb" class="nav-link" data-scroll-target="#tokenizer-tokenizer.ipynb">Tokenizer (<code>tokenizer.ipynb</code>)</a></li>
+  <li><a href="#tokens-tokens.ipynb" id="toc-tokens-tokens.ipynb" class="nav-link" data-scroll-target="#tokens-tokens.ipynb">Tokens (<code>tokens.ipynb</code>)</a></li>
+  </ul></li>
+  </ul>
+<div class="toc-actions"><ul><li><a href="https://github.com/cj-mills/cjm-fasthtml-token-selector/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div><div class="quarto-alternate-formats"><h2>Other Formats</h2><ul><li><a href="index.html.md"><i class="bi bi-file-code"></i>CommonMark</a></li></ul></div></nav>
+    </div>
+<!-- main -->
+<main class="content" id="quarto-document-content">
+
+<header id="title-block-header" class="quarto-title-block default">
+<div class="quarto-title">
+<h1 class="title">cjm-fasthtml-token-selector</h1>
+</div>
+
+<div>
+  <div class="description">
+    A token-level interactive text selector for FastHTML with gap, word, and span selection modes, custom key repeat navigation, and HTMX state sync.
+  </div>
+</div>
+
+
+<div class="quarto-title-meta">
+
+    
+  
+    
+  </div>
+  
+
+
+</header>
+
+
+<!-- WARNING: THIS FILE WAS AUTOGENERATED! DO NOT EDIT! -->
+<section id="install" class="level2">
+<h2 class="anchored" data-anchor-id="install">Install</h2>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb1"><pre class="sourceCode bash code-with-copy"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pip</span> install cjm_fasthtml_token_selector</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="project-structure" class="level2">
+<h2 class="anchored" data-anchor-id="project-structure">Project Structure</h2>
+<pre><code>nbs/
+├── components/ (2)
+│   ├── inputs.ipynb  # Hidden input rendering for HTMX state sync.
+│   └── tokens.ipynb  # Token grid rendering for all three selection modes (gap, word, span).
+├── core/ (4)
+│   ├── config.ipynb     # Configuration dataclass for token selector initialization.
+│   ├── constants.ipynb  # CSS class constants, selection mode type, timing defaults, and key defaults for the token selector.
+│   ├── html_ids.ipynb   # Prefix-based HTML ID generator for token selector DOM elements.
+│   └── models.ipynb     # Data models for tokens, render context, and mutable runtime state.
+├── helpers/ (1)
+│   └── tokenizer.ipynb  # Tokenization utilities for splitting text into tokens and converting between token indices and character positions.
+├── js/ (4)
+│   ├── core.ipynb        # Master IIFE composer for the token selector JS runtime.
+│   ├── display.ipynb     # Generates JS functions for updating token display state (caret indicators, highlights, dimming, hidden inputs).
+│   ├── navigation.ipynb  # Generates mode-specific navigation and selection JS functions.
+│   └── repeat.ipynb      # Custom key repeat engine with configurable initial delay, repeat interval, and throttle floor.
+└── keyboard/ (1)
+    └── actions.ipynb  # Keyboard navigation library integration factories for token selector mode, actions, URL maps, and hidden action buttons.</code></pre>
+<p>Total: 12 notebooks across 5 directories</p>
+</section>
+<section id="module-dependencies" class="level2">
+<h2 class="anchored" data-anchor-id="module-dependencies">Module Dependencies</h2>
+<pre class="mermaid"><code>graph LR
+    components_inputs[components.inputs&lt;br/&gt;Inputs]
+    components_tokens[components.tokens&lt;br/&gt;Tokens]
+    core_config[core.config&lt;br/&gt;Config]
+    core_constants[core.constants&lt;br/&gt;Constants]
+    core_html_ids[core.html_ids&lt;br/&gt;HTML IDs]
+    core_models[core.models&lt;br/&gt;Models]
+    helpers_tokenizer[helpers.tokenizer&lt;br/&gt;Tokenizer]
+    js_core[js.core&lt;br/&gt;Core JS]
+    js_display[js.display&lt;br/&gt;Display JS]
+    js_navigation[js.navigation&lt;br/&gt;Navigation JS]
+    js_repeat[js.repeat&lt;br/&gt;Key Repeat JS]
+    keyboard_actions[keyboard.actions&lt;br/&gt;Keyboard Actions]
+
+    components_inputs --&gt; core_models
+    components_inputs --&gt; core_html_ids
+    components_tokens --&gt; core_constants
+    components_tokens --&gt; core_models
+    components_tokens --&gt; core_config
+    components_tokens --&gt; core_html_ids
+    components_tokens --&gt; helpers_tokenizer
+    core_config --&gt; core_constants
+    helpers_tokenizer --&gt; core_models
+    js_core --&gt; js_display
+    js_core --&gt; core_models
+    js_core --&gt; core_html_ids
+    js_core --&gt; core_config
+    js_core --&gt; js_repeat
+    js_core --&gt; js_navigation
+    js_display --&gt; core_constants
+    js_display --&gt; core_html_ids
+    js_display --&gt; core_config
+    js_navigation --&gt; core_config
+    js_navigation --&gt; core_html_ids
+    js_repeat --&gt; core_config
+    keyboard_actions --&gt; core_html_ids
+    keyboard_actions --&gt; core_config
+    keyboard_actions --&gt; js_core</code></pre>
+<p><em>24 cross-module dependencies detected</em></p>
+</section>
+<section id="cli-reference" class="level2">
+<h2 class="anchored" data-anchor-id="cli-reference">CLI Reference</h2>
+<p>No CLI commands found in this project.</p>
+</section>
+<section id="module-overview" class="level2">
+<h2 class="anchored" data-anchor-id="module-overview">Module Overview</h2>
+<p>Detailed documentation for each module in the project:</p>
+<section id="keyboard-actions-actions.ipynb" class="level3">
+<h3 class="anchored" data-anchor-id="keyboard-actions-actions.ipynb">Keyboard Actions (<code>actions.ipynb</code>)</h3>
+<blockquote class="blockquote">
+<p>Keyboard navigation library integration factories for token selector mode, actions, URL maps, and hidden action buttons.</p>
+</blockquote>
+<section id="import" class="level4">
+<h4 class="anchored" data-anchor-id="import">Import</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb4"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cjm_fasthtml_token_selector.keyboard.actions <span class="im">import</span> (</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    create_token_selector_mode,</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    create_token_nav_actions,</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    build_token_selector_url_map,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    render_token_action_buttons</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="functions" class="level4">
+<h4 class="anchored" data-anchor-id="functions">Functions</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb5"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_token_selector_mode(</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,         <span class="co"># config for this instance</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    mode_name:<span class="bu">str</span> <span class="op">=</span> <span class="st">"token-select"</span>,     <span class="co"># mode name for the keyboard nav system</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    indicator_text:<span class="bu">str</span> <span class="op">=</span> <span class="st">"Token Select"</span>, <span class="co"># mode indicator text</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    exit_key:<span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>,                  <span class="co"># exit key (empty = programmatic only via Escape KeyAction)</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    exit_on_zone_change:<span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>,   <span class="co"># whether to exit on zone change</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> KeyboardMode:  <span class="co"># configured keyboard mode</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Create a keyboard mode that activates/deactivates the token selector."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb6"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> create_token_nav_actions(</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,           <span class="co"># config for this instance</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    zone_id:<span class="bu">str</span>,                          <span class="co"># focus zone ID</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    mode_name:<span class="bu">str</span> <span class="op">=</span> <span class="st">"token-select"</span>,       <span class="co"># mode name (must match the mode)</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    confirm_button_id:<span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>,           <span class="co"># HTMX button ID for confirm action</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    cancel_button_id:<span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>,            <span class="co"># HTMX button ID for cancel action</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Tuple[KeyAction, ...]:  <span class="co"># non-movement keyboard actions</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Create keyboard actions for the token selector."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb7"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_token_selector_url_map(</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    confirm_button_id:<span class="bu">str</span>,  <span class="co"># button ID for confirm action</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    cancel_button_id:<span class="bu">str</span>,   <span class="co"># button ID for cancel action</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    confirm_url:<span class="bu">str</span>,        <span class="co"># URL for confirm action</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    cancel_url:<span class="bu">str</span>,         <span class="co"># URL for cancel action</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Dict[<span class="bu">str</span>, <span class="bu">str</span>]:  <span class="co"># button ID -&gt; URL mapping</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Build URL map for keyboard system with token selector action buttons."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb8"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> render_token_action_buttons(</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    confirm_button_id:<span class="bu">str</span>,          <span class="co"># button ID for confirm</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    cancel_button_id:<span class="bu">str</span>,           <span class="co"># button ID for cancel</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    confirm_url:<span class="bu">str</span>,                <span class="co"># URL for confirm action</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    cancel_url:<span class="bu">str</span>,                 <span class="co"># URL for cancel action</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,       <span class="co"># HTML IDs (for hx_include)</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    extra_include:<span class="bu">str</span> <span class="op">=</span> <span class="st">""</span>,         <span class="co"># additional hx_include selectors</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Any:  <span class="co"># Div containing hidden action buttons</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Render hidden HTMX buttons for confirm/cancel actions."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="config-config.ipynb" class="level3">
+<h3 class="anchored" data-anchor-id="config-config.ipynb">Config (<code>config.ipynb</code>)</h3>
+<blockquote class="blockquote">
+<p>Configuration dataclass for token selector initialization.</p>
+</blockquote>
+<section id="import-1" class="level4">
+<h4 class="anchored" data-anchor-id="import-1">Import</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb9"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cjm_fasthtml_token_selector.core.config <span class="im">import</span> (</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    TokenSelectorConfig</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="functions-1" class="level4">
+<h4 class="anchored" data-anchor-id="functions-1">Functions</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb10"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _auto_prefix() <span class="op">-&gt;</span> <span class="bu">str</span>: <span class="co"># unique prefix string</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""Generate an auto-incrementing unique prefix."""</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">global</span> _prefix_counter</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    p <span class="op">=</span> <span class="ss">f"ts</span><span class="sc">{</span>_prefix_counter<span class="sc">}</span><span class="ss">"</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    _prefix_counter <span class="op">+=</span> <span class="dv">1</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> p</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _reset_prefix_counter() <span class="op">-&gt;</span> <span class="va">None</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Generate an auto-incrementing unique prefix."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb11"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _reset_prefix_counter() <span class="op">-&gt;</span> <span class="va">None</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Reset the prefix counter (for testing only)."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="classes" class="level4">
+<h4 class="anchored" data-anchor-id="classes">Classes</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb12"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TokenSelectorConfig:</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Initialization-time settings for a token selector instance."</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    prefix: <span class="bu">str</span> <span class="op">=</span> field(...)  <span class="co"># unique instance prefix</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    selection_mode: SelectionMode <span class="op">=</span> <span class="st">'gap'</span>  <span class="co"># selection behavior: "gap", "word", or "span"</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    initial_delay: <span class="bu">int</span> <span class="op">=</span> DEFAULT_INITIAL_DELAY  <span class="co"># ms before first repeat</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    repeat_interval: <span class="bu">int</span> <span class="op">=</span> DEFAULT_REPEAT_INTERVAL  <span class="co"># ms between repeats</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    throttle_floor: <span class="bu">int</span> <span class="op">=</span> DEFAULT_THROTTLE_FLOOR  <span class="co"># minimum ms between movements</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    left_key: <span class="bu">str</span> <span class="op">=</span> DEFAULT_LEFT_KEY  <span class="co"># key for leftward navigation</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    right_key: <span class="bu">str</span> <span class="op">=</span> DEFAULT_RIGHT_KEY  <span class="co"># key for rightward navigation</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    end_token_text: <span class="bu">str</span> <span class="op">=</span> DEFAULT_END_TOKEN_TEXT  <span class="co"># text for the sentinel end token</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    show_end_token: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span>  <span class="co"># whether to show the end token</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    read_only: <span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>  <span class="co"># disable click/keyboard interaction</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    wrap_navigation: <span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>  <span class="co"># wrap around at boundaries</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    on_change_callback: <span class="bu">str</span> <span class="op">=</span> <span class="st">''</span>  <span class="co"># JS function name called on selection change</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="variables" class="level4">
+<h4 class="anchored" data-anchor-id="variables">Variables</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb13"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>_prefix_counter: <span class="bu">int</span> <span class="op">=</span> <span class="dv">0</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="constants-constants.ipynb" class="level3">
+<h3 class="anchored" data-anchor-id="constants-constants.ipynb">Constants (<code>constants.ipynb</code>)</h3>
+<blockquote class="blockquote">
+<p>CSS class constants, selection mode type, timing defaults, and key defaults for the token selector.</p>
+</blockquote>
+<section id="import-2" class="level4">
+<h4 class="anchored" data-anchor-id="import-2">Import</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb14"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cjm_fasthtml_token_selector.core.constants <span class="im">import</span> (</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    SelectionMode,</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    OPACITY_50_CLS,</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    CARET_INDICATOR_CLS,</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    HIGHLIGHT_CLS,</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    DEFAULT_INITIAL_DELAY,</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    DEFAULT_REPEAT_INTERVAL,</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    DEFAULT_THROTTLE_FLOOR,</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a>    DEFAULT_LEFT_KEY,</span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    DEFAULT_RIGHT_KEY,</span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>    DEFAULT_END_TOKEN_TEXT</span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="variables-1" class="level4">
+<h4 class="anchored" data-anchor-id="variables-1">Variables</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb15"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>OPACITY_50_CLS</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>CARET_INDICATOR_CLS</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>HIGHLIGHT_CLS</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>DEFAULT_INITIAL_DELAY: <span class="bu">int</span> <span class="op">=</span> <span class="dv">400</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>DEFAULT_REPEAT_INTERVAL: <span class="bu">int</span> <span class="op">=</span> <span class="dv">80</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>DEFAULT_THROTTLE_FLOOR: <span class="bu">int</span> <span class="op">=</span> <span class="dv">50</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>DEFAULT_LEFT_KEY: <span class="bu">str</span> <span class="op">=</span> <span class="st">'ArrowLeft'</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>DEFAULT_RIGHT_KEY: <span class="bu">str</span> <span class="op">=</span> <span class="st">'ArrowRight'</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>DEFAULT_END_TOKEN_TEXT: <span class="bu">str</span> <span class="op">=</span> <span class="st">'(End)'</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="core-js-core.ipynb" class="level3">
+<h3 class="anchored" data-anchor-id="core-js-core.ipynb">Core JS (<code>core.ipynb</code>)</h3>
+<blockquote class="blockquote">
+<p>Master IIFE composer for the token selector JS runtime.</p>
+</blockquote>
+<section id="import-3" class="level4">
+<h4 class="anchored" data-anchor-id="import-3">Import</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb16"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cjm_fasthtml_token_selector.js.core <span class="im">import</span> (</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    global_callback_name,</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    generate_token_selector_js</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="functions-2" class="level4">
+<h4 class="anchored" data-anchor-id="functions-2">Functions</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb17"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> global_callback_name(</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    prefix:<span class="bu">str</span>,    <span class="co"># token selector instance prefix</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    callback:<span class="bu">str</span>,  <span class="co"># base callback name</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># global function name</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Generate a prefix-unique global callback name."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb18"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _generate_state_init_js(</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,  <span class="co"># config for this instance</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    state:TokenSelectorState,    <span class="co"># initial state</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># JS code fragment</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Generate state initialization code."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb19"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _generate_on_change_js(</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,  <span class="co"># config for this instance</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># JS code fragment</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Generate the on-change callback dispatcher."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb20"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _generate_activation_js(</span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,  <span class="co"># config for this instance</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,    <span class="co"># HTML IDs</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># JS code fragment</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Generate activate/deactivate functions."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb21"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _generate_global_callbacks_js(</span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,  <span class="co"># config for this instance</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># JS code fragment</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Generate global callback wrappers."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb22"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _generate_settle_handler_js(</span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,  <span class="co"># config for this instance</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,    <span class="co"># HTML IDs</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># JS code fragment</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"""</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="co">    Generate htmx:afterSettle handler for swap resilience.</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a><span class="co">    </span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="co">    Stores the handler reference globally and replaces it on</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="co">    re-initialization to avoid stale closure references when</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="co">    the IIFE re-runs after HTMX page transitions.</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a><span class="co">    """</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb23"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_token_selector_js(</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,              <span class="co"># config for this instance</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,                <span class="co"># HTML IDs</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    state:TokenSelectorState <span class="op">=</span> <span class="va">None</span>,         <span class="co"># initial state</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    extra_scripts:Tuple[<span class="bu">str</span>, ...] <span class="op">=</span> (),      <span class="co"># additional JS to include in the IIFE</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Any:  <span class="co"># Script element with the complete IIFE</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Compose all token selector JS into a single namespaced IIFE."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="variables-2" class="level4">
+<h4 class="anchored" data-anchor-id="variables-2">Variables</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb24"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a>_GLOBAL_CALLBACKS</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="display-js-display.ipynb" class="level3">
+<h3 class="anchored" data-anchor-id="display-js-display.ipynb">Display JS (<code>display.ipynb</code>)</h3>
+<blockquote class="blockquote">
+<p>Generates JS functions for updating token display state (caret indicators, highlights, dimming, hidden inputs).</p>
+</blockquote>
+<section id="import-4" class="level4">
+<h4 class="anchored" data-anchor-id="import-4">Import</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb25"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cjm_fasthtml_token_selector.js.display <span class="im">import</span> (</span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    generate_display_js</span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="functions-3" class="level4">
+<h4 class="anchored" data-anchor-id="functions-3">Functions</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb26"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _generate_update_inputs_js(</span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,  <span class="co"># HTML IDs</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># JS code fragment</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Generate the hidden input sync function."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb27"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _generate_gap_display_js(</span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,  <span class="co"># HTML IDs</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># JS code fragment</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Generate gap mode display update function."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb28"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _generate_word_display_js(</span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,  <span class="co"># HTML IDs</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># JS code fragment</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Generate word mode display update function."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb29"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _generate_span_display_js(</span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,  <span class="co"># HTML IDs</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># JS code fragment</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Generate span mode display update function."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb30"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_display_js(</span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,  <span class="co"># config for this instance</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,    <span class="co"># HTML IDs</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># JS code fragment for the IIFE</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Generate display update and hidden input sync JS functions."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="html-ids-html_ids.ipynb" class="level3">
+<h3 class="anchored" data-anchor-id="html-ids-html_ids.ipynb">HTML IDs (<code>html_ids.ipynb</code>)</h3>
+<blockquote class="blockquote">
+<p>Prefix-based HTML ID generator for token selector DOM elements.</p>
+</blockquote>
+<section id="import-5" class="level4">
+<h4 class="anchored" data-anchor-id="import-5">Import</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb31"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cjm_fasthtml_token_selector.core.html_ids <span class="im">import</span> (</span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>    TokenSelectorHtmlIds</span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="classes-1" class="level4">
+<h4 class="anchored" data-anchor-id="classes-1">Classes</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb32"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TokenSelectorHtmlIds:</span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Prefix-based HTML ID generator for token selector DOM elements."</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>    prefix: <span class="bu">str</span>  <span class="co"># unique instance prefix</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> container(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># outer wrapper ID</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>            <span class="co">"""Outer token selector wrapper."""</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>prefix<span class="sc">}</span><span class="ss">-token-selector"</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb32-11"><a href="#cb32-11" aria-hidden="true" tabindex="-1"></a>        <span class="at">@property</span></span>
+<span id="cb32-12"><a href="#cb32-12" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> token_grid(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># flex-wrap token container ID</span></span>
+<span id="cb32-13"><a href="#cb32-13" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Outer token selector wrapper."</span></span>
+<span id="cb32-14"><a href="#cb32-14" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb32-15"><a href="#cb32-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> token_grid(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># flex-wrap token container ID</span></span>
+<span id="cb32-16"><a href="#cb32-16" aria-hidden="true" tabindex="-1"></a>            <span class="co">"""Flex-wrap token container."""</span></span>
+<span id="cb32-17"><a href="#cb32-17" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>prefix<span class="sc">}</span><span class="ss">-token-grid"</span></span>
+<span id="cb32-18"><a href="#cb32-18" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb32-19"><a href="#cb32-19" aria-hidden="true" tabindex="-1"></a>        <span class="at">@property</span></span>
+<span id="cb32-20"><a href="#cb32-20" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> anchor_input(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># hidden input ID for anchor position</span></span>
+<span id="cb32-21"><a href="#cb32-21" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Flex-wrap token container."</span></span>
+<span id="cb32-22"><a href="#cb32-22" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb32-23"><a href="#cb32-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> anchor_input(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># hidden input ID for anchor position</span></span>
+<span id="cb32-24"><a href="#cb32-24" aria-hidden="true" tabindex="-1"></a>            <span class="co">"""Hidden input ID for anchor position (hyphenated, for CSS selectors)."""</span></span>
+<span id="cb32-25"><a href="#cb32-25" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>prefix<span class="sc">}</span><span class="ss">-anchor"</span></span>
+<span id="cb32-26"><a href="#cb32-26" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb32-27"><a href="#cb32-27" aria-hidden="true" tabindex="-1"></a>        <span class="at">@property</span></span>
+<span id="cb32-28"><a href="#cb32-28" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> focus_input(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># hidden input ID for focus position</span></span>
+<span id="cb32-29"><a href="#cb32-29" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Hidden input ID for anchor position (hyphenated, for CSS selectors)."</span></span>
+<span id="cb32-30"><a href="#cb32-30" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb32-31"><a href="#cb32-31" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> focus_input(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># hidden input ID for focus position</span></span>
+<span id="cb32-32"><a href="#cb32-32" aria-hidden="true" tabindex="-1"></a>            <span class="co">"""Hidden input ID for focus position (hyphenated, for CSS selectors)."""</span></span>
+<span id="cb32-33"><a href="#cb32-33" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>prefix<span class="sc">}</span><span class="ss">-focus"</span></span>
+<span id="cb32-34"><a href="#cb32-34" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb32-35"><a href="#cb32-35" aria-hidden="true" tabindex="-1"></a>        <span class="at">@property</span></span>
+<span id="cb32-36"><a href="#cb32-36" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> anchor_name(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># form field name for anchor position</span></span>
+<span id="cb32-37"><a href="#cb32-37" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Hidden input ID for focus position (hyphenated, for CSS selectors)."</span></span>
+<span id="cb32-38"><a href="#cb32-38" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb32-39"><a href="#cb32-39" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> anchor_name(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># form field name for anchor position</span></span>
+<span id="cb32-40"><a href="#cb32-40" aria-hidden="true" tabindex="-1"></a>            <span class="co">"""Form field name for anchor position (underscored, for Python kwargs)."""</span></span>
+<span id="cb32-41"><a href="#cb32-41" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>prefix<span class="sc">}</span><span class="ss">_anchor"</span></span>
+<span id="cb32-42"><a href="#cb32-42" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb32-43"><a href="#cb32-43" aria-hidden="true" tabindex="-1"></a>        <span class="at">@property</span></span>
+<span id="cb32-44"><a href="#cb32-44" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> focus_name(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># form field name for focus position</span></span>
+<span id="cb32-45"><a href="#cb32-45" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Form field name for anchor position (underscored, for Python kwargs)."</span></span>
+<span id="cb32-46"><a href="#cb32-46" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb32-47"><a href="#cb32-47" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> focus_name(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># form field name for focus position</span></span>
+<span id="cb32-48"><a href="#cb32-48" aria-hidden="true" tabindex="-1"></a>            <span class="co">"""Form field name for focus position (underscored, for Python kwargs)."""</span></span>
+<span id="cb32-49"><a href="#cb32-49" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> <span class="ss">f"</span><span class="sc">{</span><span class="va">self</span><span class="sc">.</span>prefix<span class="sc">}</span><span class="ss">_focus"</span></span>
+<span id="cb32-50"><a href="#cb32-50" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb32-51"><a href="#cb32-51" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> token(<span class="va">self</span>,</span>
+<span id="cb32-52"><a href="#cb32-52" aria-hidden="true" tabindex="-1"></a>                  index:<span class="bu">int</span>,  <span class="co"># token position index</span></span>
+<span id="cb32-53"><a href="#cb32-53" aria-hidden="true" tabindex="-1"></a>                 ) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># individual token span ID</span></span>
+<span id="cb32-54"><a href="#cb32-54" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Form field name for focus position (underscored, for Python kwargs)."</span></span>
+<span id="cb32-55"><a href="#cb32-55" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb32-56"><a href="#cb32-56" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> token(<span class="va">self</span>,</span>
+<span id="cb32-57"><a href="#cb32-57" aria-hidden="true" tabindex="-1"></a>                  index:<span class="bu">int</span>,  <span class="co"># token position index</span></span>
+<span id="cb32-58"><a href="#cb32-58" aria-hidden="true" tabindex="-1"></a>                 ) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># individual token span ID</span></span>
+<span id="cb32-59"><a href="#cb32-59" aria-hidden="true" tabindex="-1"></a>        <span class="co">"Individual token span ID."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="inputs-inputs.ipynb" class="level3">
+<h3 class="anchored" data-anchor-id="inputs-inputs.ipynb">Inputs (<code>inputs.ipynb</code>)</h3>
+<blockquote class="blockquote">
+<p>Hidden input rendering for HTMX state sync.</p>
+</blockquote>
+<section id="import-6" class="level4">
+<h4 class="anchored" data-anchor-id="import-6">Import</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb33"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb33-1"><a href="#cb33-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cjm_fasthtml_token_selector.components.inputs <span class="im">import</span> (</span>
+<span id="cb33-2"><a href="#cb33-2" aria-hidden="true" tabindex="-1"></a>    render_hidden_inputs,</span>
+<span id="cb33-3"><a href="#cb33-3" aria-hidden="true" tabindex="-1"></a>    build_include_selector</span>
+<span id="cb33-4"><a href="#cb33-4" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="functions-4" class="level4">
+<h4 class="anchored" data-anchor-id="functions-4">Functions</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb34"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb34-1"><a href="#cb34-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> render_hidden_inputs(</span>
+<span id="cb34-2"><a href="#cb34-2" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,                   <span class="co"># HTML IDs for this instance</span></span>
+<span id="cb34-3"><a href="#cb34-3" aria-hidden="true" tabindex="-1"></a>    state:Optional[TokenSelectorState] <span class="op">=</span> <span class="va">None</span>,  <span class="co"># current state</span></span>
+<span id="cb34-4"><a href="#cb34-4" aria-hidden="true" tabindex="-1"></a>    oob:<span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>,                           <span class="co"># render with hx-swap-oob</span></span>
+<span id="cb34-5"><a href="#cb34-5" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Any:  <span class="co"># tuple of anchor and focus hidden inputs</span></span>
+<span id="cb34-6"><a href="#cb34-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Render hidden inputs for HTMX form submission."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb35"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb35-1"><a href="#cb35-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> build_include_selector(</span>
+<span id="cb35-2"><a href="#cb35-2" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,  <span class="co"># HTML IDs for this instance</span></span>
+<span id="cb35-3"><a href="#cb35-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># CSS selector string for hx_include</span></span>
+<span id="cb35-4"><a href="#cb35-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Build a CSS selector for including anchor and focus inputs in HTMX requests."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="models-models.ipynb" class="level3">
+<h3 class="anchored" data-anchor-id="models-models.ipynb">Models (<code>models.ipynb</code>)</h3>
+<blockquote class="blockquote">
+<p>Data models for tokens, render context, and mutable runtime state.</p>
+</blockquote>
+<section id="import-7" class="level4">
+<h4 class="anchored" data-anchor-id="import-7">Import</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb36"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cjm_fasthtml_token_selector.core.models <span class="im">import</span> (</span>
+<span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a>    Token,</span>
+<span id="cb36-3"><a href="#cb36-3" aria-hidden="true" tabindex="-1"></a>    TokenRenderContext,</span>
+<span id="cb36-4"><a href="#cb36-4" aria-hidden="true" tabindex="-1"></a>    TokenSelectorState</span>
+<span id="cb36-5"><a href="#cb36-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="classes-2" class="level4">
+<h4 class="anchored" data-anchor-id="classes-2">Classes</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb37"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb37-1"><a href="#cb37-1" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
+<span id="cb37-2"><a href="#cb37-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> Token:</span>
+<span id="cb37-3"><a href="#cb37-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"A single token in the token grid."</span></span>
+<span id="cb37-4"><a href="#cb37-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb37-5"><a href="#cb37-5" aria-hidden="true" tabindex="-1"></a>    text: <span class="bu">str</span>  <span class="co"># the token text content</span></span>
+<span id="cb37-6"><a href="#cb37-6" aria-hidden="true" tabindex="-1"></a>    index: <span class="bu">int</span>  <span class="co"># 0-based position in the token list</span></span>
+<span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>    metadata: Any  <span class="co"># optional consumer metadata per token</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb38"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb38-1"><a href="#cb38-1" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
+<span id="cb38-2"><a href="#cb38-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TokenRenderContext:</span>
+<span id="cb38-3"><a href="#cb38-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Context passed to per-token styling callbacks."</span></span>
+<span id="cb38-4"><a href="#cb38-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb38-5"><a href="#cb38-5" aria-hidden="true" tabindex="-1"></a>    token: Token  <span class="co"># the token being rendered</span></span>
+<span id="cb38-6"><a href="#cb38-6" aria-hidden="true" tabindex="-1"></a>    is_selected: <span class="bu">bool</span>  <span class="co"># whether this token is in the current selection</span></span>
+<span id="cb38-7"><a href="#cb38-7" aria-hidden="true" tabindex="-1"></a>    is_anchor: <span class="bu">bool</span>  <span class="co"># whether this token is at the anchor position</span></span>
+<span id="cb38-8"><a href="#cb38-8" aria-hidden="true" tabindex="-1"></a>    is_focus: <span class="bu">bool</span>  <span class="co"># whether this token is at the focus position</span></span>
+<span id="cb38-9"><a href="#cb38-9" aria-hidden="true" tabindex="-1"></a>    selection_mode: <span class="bu">str</span>  <span class="co"># current selection mode</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb39"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
+<span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> TokenSelectorState:</span>
+<span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Mutable runtime state for a token selector instance."</span></span>
+<span id="cb39-4"><a href="#cb39-4" aria-hidden="true" tabindex="-1"></a>    </span>
+<span id="cb39-5"><a href="#cb39-5" aria-hidden="true" tabindex="-1"></a>    anchor: <span class="bu">int</span> <span class="op">=</span> <span class="dv">0</span>  <span class="co"># anchor position (gap index or token index)</span></span>
+<span id="cb39-6"><a href="#cb39-6" aria-hidden="true" tabindex="-1"></a>    focus: <span class="bu">int</span> <span class="op">=</span> <span class="dv">0</span>  <span class="co"># focus position (same as anchor in gap/word mode)</span></span>
+<span id="cb39-7"><a href="#cb39-7" aria-hidden="true" tabindex="-1"></a>    word_count: <span class="bu">int</span> <span class="op">=</span> <span class="dv">0</span>  <span class="co"># total number of tokens</span></span>
+<span id="cb39-8"><a href="#cb39-8" aria-hidden="true" tabindex="-1"></a>    active: <span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>  <span class="co"># whether the key repeat engine is active</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="navigation-js-navigation.ipynb" class="level3">
+<h3 class="anchored" data-anchor-id="navigation-js-navigation.ipynb">Navigation JS (<code>navigation.ipynb</code>)</h3>
+<blockquote class="blockquote">
+<p>Generates mode-specific navigation and selection JS functions.</p>
+</blockquote>
+<section id="import-8" class="level4">
+<h4 class="anchored" data-anchor-id="import-8">Import</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb40"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cjm_fasthtml_token_selector.js.navigation <span class="im">import</span> (</span>
+<span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a>    generate_navigation_js</span>
+<span id="cb40-3"><a href="#cb40-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="functions-5" class="level4">
+<h4 class="anchored" data-anchor-id="functions-5">Functions</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb41"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _generate_gap_nav_js(</span>
+<span id="cb41-2"><a href="#cb41-2" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,  <span class="co"># config for this instance</span></span>
+<span id="cb41-3"><a href="#cb41-3" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,    <span class="co"># HTML IDs</span></span>
+<span id="cb41-4"><a href="#cb41-4" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># JS code fragment</span></span>
+<span id="cb41-5"><a href="#cb41-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Generate gap mode navigation functions."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb42"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb42-1"><a href="#cb42-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _generate_word_nav_js(</span>
+<span id="cb42-2"><a href="#cb42-2" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,  <span class="co"># config for this instance</span></span>
+<span id="cb42-3"><a href="#cb42-3" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,    <span class="co"># HTML IDs</span></span>
+<span id="cb42-4"><a href="#cb42-4" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># JS code fragment</span></span>
+<span id="cb42-5"><a href="#cb42-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Generate word mode navigation functions."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb43"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _generate_span_nav_js(</span>
+<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,  <span class="co"># config for this instance</span></span>
+<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,    <span class="co"># HTML IDs</span></span>
+<span id="cb43-4"><a href="#cb43-4" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># JS code fragment</span></span>
+<span id="cb43-5"><a href="#cb43-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Generate span mode navigation functions."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb44"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_navigation_js(</span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,  <span class="co"># config for this instance</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,    <span class="co"># HTML IDs</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># JS code fragment for the IIFE</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Generate mode-specific navigation and selection JS functions."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="key-repeat-js-repeat.ipynb" class="level3">
+<h3 class="anchored" data-anchor-id="key-repeat-js-repeat.ipynb">Key Repeat JS (<code>repeat.ipynb</code>)</h3>
+<blockquote class="blockquote">
+<p>Custom key repeat engine with configurable initial delay, repeat interval, and throttle floor.</p>
+</blockquote>
+<section id="import-9" class="level4">
+<h4 class="anchored" data-anchor-id="import-9">Import</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb45"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cjm_fasthtml_token_selector.js.repeat <span class="im">import</span> (</span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>    generate_key_repeat_js</span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="functions-6" class="level4">
+<h4 class="anchored" data-anchor-id="functions-6">Functions</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb46"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _generate_movement_dispatch_js(</span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,  <span class="co"># config for this instance</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># JS code fragment for the movement dispatcher</span></span>
+<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Generate the key-to-movement dispatch logic."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb47"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> generate_key_repeat_js(</span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,  <span class="co"># config with timing settings</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">str</span>:  <span class="co"># JS code fragment for the IIFE</span></span>
+<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Generate the custom key repeat engine JS."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="tokenizer-tokenizer.ipynb" class="level3">
+<h3 class="anchored" data-anchor-id="tokenizer-tokenizer.ipynb">Tokenizer (<code>tokenizer.ipynb</code>)</h3>
+<blockquote class="blockquote">
+<p>Tokenization utilities for splitting text into tokens and converting between token indices and character positions.</p>
+</blockquote>
+<section id="import-10" class="level4">
+<h4 class="anchored" data-anchor-id="import-10">Import</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb48"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cjm_fasthtml_token_selector.helpers.tokenizer <span class="im">import</span> (</span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    count_tokens,</span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>    get_token_list,</span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>    token_index_to_char_position,</span>
+<span id="cb48-5"><a href="#cb48-5" aria-hidden="true" tabindex="-1"></a>    tokenize</span>
+<span id="cb48-6"><a href="#cb48-6" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="functions-7" class="level4">
+<h4 class="anchored" data-anchor-id="functions-7">Functions</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb49"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> count_tokens(</span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>    text:<span class="bu">str</span>,  <span class="co"># text to count tokens in</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">int</span>:  <span class="co"># token count</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Count the number of whitespace-delimited tokens in text."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb50"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> get_token_list(</span>
+<span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>    text:<span class="bu">str</span>,  <span class="co"># text to split into tokens</span></span>
+<span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> List[<span class="bu">str</span>]:  <span class="co"># list of token strings</span></span>
+<span id="cb50-4"><a href="#cb50-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Split text into a list of whitespace-delimited tokens."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb51"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> token_index_to_char_position(</span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a>    text:<span class="bu">str</span>,         <span class="co"># full text string</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a>    token_index:<span class="bu">int</span>,  <span class="co"># 0-based token index</span></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">int</span>:  <span class="co"># character position for split</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Convert a token index to the character position where a split should occur."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb52"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> tokenize(</span>
+<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a>    text_or_tokens:Union[<span class="bu">str</span>, List[<span class="bu">str</span>]],  <span class="co"># raw text string or pre-tokenized list</span></span>
+<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a>    metadata:Optional[List[Any]] <span class="op">=</span> <span class="va">None</span>,   <span class="co"># per-token metadata (must match token count)</span></span>
+<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> List[Token]:  <span class="co"># list of Token objects</span></span>
+<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Convert text or a pre-tokenized list into Token objects."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+</section>
+<section id="tokens-tokens.ipynb" class="level3">
+<h3 class="anchored" data-anchor-id="tokens-tokens.ipynb">Tokens (<code>tokens.ipynb</code>)</h3>
+<blockquote class="blockquote">
+<p>Token grid rendering for all three selection modes (gap, word, span).</p>
+</blockquote>
+<section id="import-11" class="level4">
+<h4 class="anchored" data-anchor-id="import-11">Import</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb53"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> cjm_fasthtml_token_selector.components.tokens <span class="im">import</span> (</span>
+<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a>    render_token,</span>
+<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a>    render_end_token,</span>
+<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>    render_token_grid</span>
+<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>)</span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+</section>
+<section id="functions-8" class="level4">
+<h4 class="anchored" data-anchor-id="functions-8">Functions</h4>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb54"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _is_token_selected(</span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a>    index:<span class="bu">int</span>,              <span class="co"># token index</span></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a>    mode:<span class="bu">str</span>,               <span class="co"># selection mode</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>    anchor:<span class="bu">int</span>,             <span class="co"># anchor position</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>    focus:<span class="bu">int</span>,              <span class="co"># focus position</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">bool</span>:  <span class="co"># whether the token is in the selection</span></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Check if a token at the given index is within the current selection."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb55"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _build_token_render_context(</span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>    token:Token,                    <span class="co"># token being rendered</span></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a>    mode:<span class="bu">str</span>,                       <span class="co"># selection mode</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>    anchor:<span class="bu">int</span>,                     <span class="co"># anchor position</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>    focus:<span class="bu">int</span>,                      <span class="co"># focus position</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> TokenRenderContext:  <span class="co"># render context for styling callback</span></span>
+<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Build a render context for the per-token styling callback."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb56"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> _render_caret_indicator() <span class="op">-&gt;</span> Any:  <span class="co"># caret indicator Div element</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Render the pulsing caret indicator bar."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb57"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> render_token(</span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>    token:Token,                                      <span class="co"># token to render</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,                       <span class="co"># config for this instance</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,                         <span class="co"># HTML IDs</span></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>    state:Optional[TokenSelectorState] <span class="op">=</span> <span class="va">None</span>,        <span class="co"># current state for highlighting</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>    style_callback:Optional[Callable] <span class="op">=</span> <span class="va">None</span>,         <span class="co"># (TokenRenderContext) -&gt; str for extra CSS</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>    read_only:<span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>,                           <span class="co"># disable interaction</span></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Any:  <span class="co"># Span element for this token</span></span>
+<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Render a single interactive word token."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb58"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> render_end_token(</span>
+<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,                 <span class="co"># config for this instance</span></span>
+<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,                   <span class="co"># HTML IDs</span></span>
+<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a>    state:Optional[TokenSelectorState] <span class="op">=</span> <span class="va">None</span>,  <span class="co"># current state</span></span>
+<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a>    read_only:<span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>,                     <span class="co"># disable interaction</span></span>
+<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Any:  <span class="co"># end sentinel Span element</span></span>
+<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Render the end-of-text sentinel token."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+<div class="code-copy-outer-scaffold"><div class="sourceCode" id="cb59"><pre class="sourceCode python code-with-copy"><code class="sourceCode python"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> render_token_grid(</span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a>    tokens:List[Token],                               <span class="co"># token list to render</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a>    config:TokenSelectorConfig,                       <span class="co"># config for this instance</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a>    ids:TokenSelectorHtmlIds,                         <span class="co"># HTML IDs</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a>    state:Optional[TokenSelectorState] <span class="op">=</span> <span class="va">None</span>,        <span class="co"># current state for highlighting</span></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a>    style_callback:Optional[Callable] <span class="op">=</span> <span class="va">None</span>,         <span class="co"># (TokenRenderContext) -&gt; str for extra CSS</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a>    read_only:<span class="bu">bool</span> <span class="op">=</span> <span class="va">False</span>,                           <span class="co"># disable all interaction</span></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Any:  <span class="co"># Div containing the complete token grid</span></span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">"Render the full interactive token grid."</span></span></code></pre></div><button title="Copy to Clipboard" class="code-copy-button"><i class="bi"></i></button></div>
+
+
+</section>
+</section>
+</section>
+
+</main> <!-- /main -->
+<script id="quarto-html-after-body" type="application/javascript">
+  window.document.addEventListener("DOMContentLoaded", function (event) {
+    const icon = "";
+    const anchorJS = new window.AnchorJS();
+    anchorJS.options = {
+      placement: 'right',
+      icon: icon
+    };
+    anchorJS.add('.anchored');
+    const isCodeAnnotation = (el) => {
+      for (const clz of el.classList) {
+        if (clz.startsWith('code-annotation-')) {                     
+          return true;
+        }
+      }
+      return false;
+    }
+    const onCopySuccess = function(e) {
+      // button target
+      const button = e.trigger;
+      // don't keep focus
+      button.blur();
+      // flash "checked"
+      button.classList.add('code-copy-button-checked');
+      var currentTitle = button.getAttribute("title");
+      button.setAttribute("title", "Copied!");
+      let tooltip;
+      if (window.bootstrap) {
+        button.setAttribute("data-bs-toggle", "tooltip");
+        button.setAttribute("data-bs-placement", "left");
+        button.setAttribute("data-bs-title", "Copied!");
+        tooltip = new bootstrap.Tooltip(button, 
+          { trigger: "manual", 
+            customClass: "code-copy-button-tooltip",
+            offset: [0, -8]});
+        tooltip.show();    
+      }
+      setTimeout(function() {
+        if (tooltip) {
+          tooltip.hide();
+          button.removeAttribute("data-bs-title");
+          button.removeAttribute("data-bs-toggle");
+          button.removeAttribute("data-bs-placement");
+        }
+        button.setAttribute("title", currentTitle);
+        button.classList.remove('code-copy-button-checked');
+      }, 1000);
+      // clear code selection
+      e.clearSelection();
+    }
+    const getTextToCopy = function(trigger) {
+      const outerScaffold = trigger.parentElement.cloneNode(true);
+      const codeEl = outerScaffold.querySelector('code');
+      for (const childEl of codeEl.children) {
+        if (isCodeAnnotation(childEl)) {
+          childEl.remove();
+        }
+      }
+      return codeEl.innerText;
+    }
+    const clipboard = new window.ClipboardJS('.code-copy-button:not([data-in-quarto-modal])', {
+      text: getTextToCopy
+    });
+    clipboard.on('success', onCopySuccess);
+    if (window.document.getElementById('quarto-embedded-source-code-modal')) {
+      const clipboardModal = new window.ClipboardJS('.code-copy-button[data-in-quarto-modal]', {
+        text: getTextToCopy,
+        container: window.document.getElementById('quarto-embedded-source-code-modal')
+      });
+      clipboardModal.on('success', onCopySuccess);
+    }
+      var localhostRegex = new RegExp(/^(?:http|https):\/\/localhost\:?[0-9]*\//);
+      var mailtoRegex = new RegExp(/^mailto:/);
+        var filterRegex = new RegExp("https:\/\/cj-mills\.github\.io\/cjm-fasthtml-token-selector");
+      var isInternal = (href) => {
+          return filterRegex.test(href) || localhostRegex.test(href) || mailtoRegex.test(href);
+      }
+      // Inspect non-navigation links and adorn them if external
+     var links = window.document.querySelectorAll('a[href]:not(.nav-link):not(.navbar-brand):not(.toc-action):not(.sidebar-link):not(.sidebar-item-toggle):not(.pagination-link):not(.no-external):not([aria-hidden]):not(.dropdown-item):not(.quarto-navigation-tool):not(.about-link)');
+      for (var i=0; i<links.length; i++) {
+        const link = links[i];
+        if (!isInternal(link.href)) {
+          // undo the damage that might have been done by quarto-nav.js in the case of
+          // links that we want to consider external
+          if (link.dataset.originalHref !== undefined) {
+            link.href = link.dataset.originalHref;
+          }
+        }
+      }
+    function tippyHover(el, contentFn, onTriggerFn, onUntriggerFn) {
+      const config = {
+        allowHTML: true,
+        maxWidth: 500,
+        delay: 100,
+        arrow: false,
+        appendTo: function(el) {
+            return el.parentElement;
+        },
+        interactive: true,
+        interactiveBorder: 10,
+        theme: 'quarto',
+        placement: 'bottom-start',
+      };
+      if (contentFn) {
+        config.content = contentFn;
+      }
+      if (onTriggerFn) {
+        config.onTrigger = onTriggerFn;
+      }
+      if (onUntriggerFn) {
+        config.onUntrigger = onUntriggerFn;
+      }
+      window.tippy(el, config); 
+    }
+    const noterefs = window.document.querySelectorAll('a[role="doc-noteref"]');
+    for (var i=0; i<noterefs.length; i++) {
+      const ref = noterefs[i];
+      tippyHover(ref, function() {
+        // use id or data attribute instead here
+        let href = ref.getAttribute('data-footnote-href') || ref.getAttribute('href');
+        try { href = new URL(href).hash; } catch {}
+        const id = href.replace(/^#\/?/, "");
+        const note = window.document.getElementById(id);
+        if (note) {
+          return note.innerHTML;
+        } else {
+          return "";
+        }
+      });
+    }
+    const xrefs = window.document.querySelectorAll('a.quarto-xref');
+    const processXRef = (id, note) => {
+      // Strip column container classes
+      const stripColumnClz = (el) => {
+        el.classList.remove("page-full", "page-columns");
+        if (el.children) {
+          for (const child of el.children) {
+            stripColumnClz(child);
+          }
+        }
+      }
+      stripColumnClz(note)
+      if (id === null || id.startsWith('sec-')) {
+        // Special case sections, only their first couple elements
+        const container = document.createElement("div");
+        if (note.children && note.children.length > 2) {
+          container.appendChild(note.children[0].cloneNode(true));
+          for (let i = 1; i < note.children.length; i++) {
+            const child = note.children[i];
+            if (child.tagName === "P" && child.innerText === "") {
+              continue;
+            } else {
+              container.appendChild(child.cloneNode(true));
+              break;
+            }
+          }
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(container);
+          }
+          return container.innerHTML
+        } else {
+          if (window.Quarto?.typesetMath) {
+            window.Quarto.typesetMath(note);
+          }
+          return note.innerHTML;
+        }
+      } else {
+        // Remove any anchor links if they are present
+        const anchorLink = note.querySelector('a.anchorjs-link');
+        if (anchorLink) {
+          anchorLink.remove();
+        }
+        if (window.Quarto?.typesetMath) {
+          window.Quarto.typesetMath(note);
+        }
+        if (note.classList.contains("callout")) {
+          return note.outerHTML;
+        } else {
+          return note.innerHTML;
+        }
+      }
+    }
+    for (var i=0; i<xrefs.length; i++) {
+      const xref = xrefs[i];
+      tippyHover(xref, undefined, function(instance) {
+        instance.disable();
+        let url = xref.getAttribute('href');
+        let hash = undefined; 
+        if (url.startsWith('#')) {
+          hash = url;
+        } else {
+          try { hash = new URL(url).hash; } catch {}
+        }
+        if (hash) {
+          const id = hash.replace(/^#\/?/, "");
+          const note = window.document.getElementById(id);
+          if (note !== null) {
+            try {
+              const html = processXRef(id, note.cloneNode(true));
+              instance.setContent(html);
+            } finally {
+              instance.enable();
+              instance.show();
+            }
+          } else {
+            // See if we can fetch this
+            fetch(url.split('#')[0])
+            .then(res => res.text())
+            .then(html => {
+              const parser = new DOMParser();
+              const htmlDoc = parser.parseFromString(html, "text/html");
+              const note = htmlDoc.getElementById(id);
+              if (note !== null) {
+                const html = processXRef(id, note);
+                instance.setContent(html);
+              } 
+            }).finally(() => {
+              instance.enable();
+              instance.show();
+            });
+          }
+        } else {
+          // See if we can fetch a full url (with no hash to target)
+          // This is a special case and we should probably do some content thinning / targeting
+          fetch(url)
+          .then(res => res.text())
+          .then(html => {
+            const parser = new DOMParser();
+            const htmlDoc = parser.parseFromString(html, "text/html");
+            const note = htmlDoc.querySelector('main.content');
+            if (note !== null) {
+              // This should only happen for chapter cross references
+              // (since there is no id in the URL)
+              // remove the first header
+              if (note.children.length > 0 && note.children[0].tagName === "HEADER") {
+                note.children[0].remove();
+              }
+              const html = processXRef(null, note);
+              instance.setContent(html);
+            } 
+          }).finally(() => {
+            instance.enable();
+            instance.show();
+          });
+        }
+      }, function(instance) {
+      });
+    }
+        let selectedAnnoteEl;
+        const selectorForAnnotation = ( cell, annotation) => {
+          let cellAttr = 'data-code-cell="' + cell + '"';
+          let lineAttr = 'data-code-annotation="' +  annotation + '"';
+          const selector = 'span[' + cellAttr + '][' + lineAttr + ']';
+          return selector;
+        }
+        const selectCodeLines = (annoteEl) => {
+          const doc = window.document;
+          const targetCell = annoteEl.getAttribute("data-target-cell");
+          const targetAnnotation = annoteEl.getAttribute("data-target-annotation");
+          const annoteSpan = window.document.querySelector(selectorForAnnotation(targetCell, targetAnnotation));
+          const lines = annoteSpan.getAttribute("data-code-lines").split(",");
+          const lineIds = lines.map((line) => {
+            return targetCell + "-" + line;
+          })
+          let top = null;
+          let height = null;
+          let parent = null;
+          if (lineIds.length > 0) {
+              //compute the position of the single el (top and bottom and make a div)
+              const el = window.document.getElementById(lineIds[0]);
+              top = el.offsetTop;
+              height = el.offsetHeight;
+              parent = el.parentElement.parentElement;
+            if (lineIds.length > 1) {
+              const lastEl = window.document.getElementById(lineIds[lineIds.length - 1]);
+              const bottom = lastEl.offsetTop + lastEl.offsetHeight;
+              height = bottom - top;
+            }
+            if (top !== null && height !== null && parent !== null) {
+              // cook up a div (if necessary) and position it 
+              let div = window.document.getElementById("code-annotation-line-highlight");
+              if (div === null) {
+                div = window.document.createElement("div");
+                div.setAttribute("id", "code-annotation-line-highlight");
+                div.style.position = 'absolute';
+                parent.appendChild(div);
+              }
+              div.style.top = top - 2 + "px";
+              div.style.height = height + 4 + "px";
+              div.style.left = 0;
+              let gutterDiv = window.document.getElementById("code-annotation-line-highlight-gutter");
+              if (gutterDiv === null) {
+                gutterDiv = window.document.createElement("div");
+                gutterDiv.setAttribute("id", "code-annotation-line-highlight-gutter");
+                gutterDiv.style.position = 'absolute';
+                const codeCell = window.document.getElementById(targetCell);
+                const gutter = codeCell.querySelector('.code-annotation-gutter');
+                gutter.appendChild(gutterDiv);
+              }
+              gutterDiv.style.top = top - 2 + "px";
+              gutterDiv.style.height = height + 4 + "px";
+            }
+            selectedAnnoteEl = annoteEl;
+          }
+        };
+        const unselectCodeLines = () => {
+          const elementsIds = ["code-annotation-line-highlight", "code-annotation-line-highlight-gutter"];
+          elementsIds.forEach((elId) => {
+            const div = window.document.getElementById(elId);
+            if (div) {
+              div.remove();
+            }
+          });
+          selectedAnnoteEl = undefined;
+        };
+          // Handle positioning of the toggle
+      window.addEventListener(
+        "resize",
+        throttle(() => {
+          elRect = undefined;
+          if (selectedAnnoteEl) {
+            selectCodeLines(selectedAnnoteEl);
+          }
+        }, 10)
+      );
+      function throttle(fn, ms) {
+      let throttle = false;
+      let timer;
+        return (...args) => {
+          if(!throttle) { // first call gets through
+              fn.apply(this, args);
+              throttle = true;
+          } else { // all the others get throttled
+              if(timer) clearTimeout(timer); // cancel #2
+              timer = setTimeout(() => {
+                fn.apply(this, args);
+                timer = throttle = false;
+              }, ms);
+          }
+        };
+      }
+        // Attach click handler to the DT
+        const annoteDls = window.document.querySelectorAll('dt[data-target-cell]');
+        for (const annoteDlNode of annoteDls) {
+          annoteDlNode.addEventListener('click', (event) => {
+            const clickedEl = event.target;
+            if (clickedEl !== selectedAnnoteEl) {
+              unselectCodeLines();
+              const activeEl = window.document.querySelector('dt[data-target-cell].code-annotation-active');
+              if (activeEl) {
+                activeEl.classList.remove('code-annotation-active');
+              }
+              selectCodeLines(clickedEl);
+              clickedEl.classList.add('code-annotation-active');
+            } else {
+              // Unselect the line
+              unselectCodeLines();
+              clickedEl.classList.remove('code-annotation-active');
+            }
+          });
+        }
+    const findCites = (el) => {
+      const parentEl = el.parentElement;
+      if (parentEl) {
+        const cites = parentEl.dataset.cites;
+        if (cites) {
+          return {
+            el,
+            cites: cites.split(' ')
+          };
+        } else {
+          return findCites(el.parentElement)
+        }
+      } else {
+        return undefined;
+      }
+    };
+    var bibliorefs = window.document.querySelectorAll('a[role="doc-biblioref"]');
+    for (var i=0; i<bibliorefs.length; i++) {
+      const ref = bibliorefs[i];
+      const citeInfo = findCites(ref);
+      if (citeInfo) {
+        tippyHover(citeInfo.el, function() {
+          var popup = window.document.createElement('div');
+          citeInfo.cites.forEach(function(cite) {
+            var citeDiv = window.document.createElement('div');
+            citeDiv.classList.add('hanging-indent');
+            citeDiv.classList.add('csl-entry');
+            var biblioDiv = window.document.getElementById('ref-' + cite);
+            if (biblioDiv) {
+              citeDiv.innerHTML = biblioDiv.innerHTML;
+            }
+            popup.appendChild(citeDiv);
+          });
+          return popup.innerHTML;
+        });
+      }
+    }
+  });
+  </script>
+</div> <!-- /content -->
+
+
+
+
+<footer class="footer"><div class="nav-footer"><div class="nav-footer-center"><div class="toc-actions d-sm-block d-md-none"><ul><li><a href="https://github.com/cj-mills/cjm-fasthtml-token-selector/issues/new" class="toc-action"><i class="bi bi-github"></i>Report an issue</a></li></ul></div></div></div></footer></body></html>

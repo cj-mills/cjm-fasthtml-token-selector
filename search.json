@@ -1,0 +1,469 @@
+[
+  {
+    "objectID": "js/display.html",
+    "href": "js/display.html",
+    "title": "Display JS",
+    "section": "",
+    "text": "def generate_display_js(\n    config:TokenSelectorConfig, # config for this instance\n    ids:TokenSelectorHtmlIds, # HTML IDs\n)-&gt;str: # JS code fragment for the IIFE\n\nGenerate display update and hidden input sync JS functions.\n\nfrom cjm_fasthtml_token_selector.core.config import TokenSelectorConfig, _reset_prefix_counter\nfrom cjm_fasthtml_token_selector.core.html_ids import TokenSelectorHtmlIds\n\n_reset_prefix_counter()\n\ncfg = TokenSelectorConfig(prefix=\"t\", selection_mode=\"gap\")\nids = TokenSelectorHtmlIds(prefix=\"t\")\njs = generate_display_js(cfg, ids)\nassert \"ns.updateDisplay\" in js\nassert \"ns.updateInputs\" in js\nassert \"t-anchor\" in js\nassert \"t-focus\" in js\nassert \"caret-indicator\" in js\nprint(\"Gap display JS generated!\")\n\ncfg_w = TokenSelectorConfig(prefix=\"tw\", selection_mode=\"word\")\nids_w = TokenSelectorHtmlIds(prefix=\"tw\")\njs_w = generate_display_js(cfg_w, ids_w)\nassert HIGHLIGHT_CLS in js_w\nprint(\"Word display JS generated!\")\n\ncfg_s = TokenSelectorConfig(prefix=\"ts\", selection_mode=\"span\")\nids_s = TokenSelectorHtmlIds(prefix=\"ts\")\njs_s = generate_display_js(cfg_s, ids_s)\nassert HIGHLIGHT_CLS in js_s\nassert \"caret-indicator\" in js_s\nprint(\"Span display JS generated!\")\n\n_reset_prefix_counter()\nprint(\"All display JS tests passed!\")\n\nGap display JS generated!\nWord display JS generated!\nSpan display JS generated!\nAll display JS tests passed!",
+    "crumbs": [
+      "js",
+      "Display JS"
+    ]
+  },
+  {
+    "objectID": "js/display.html#public-api",
+    "href": "js/display.html#public-api",
+    "title": "Display JS",
+    "section": "",
+    "text": "def generate_display_js(\n    config:TokenSelectorConfig, # config for this instance\n    ids:TokenSelectorHtmlIds, # HTML IDs\n)-&gt;str: # JS code fragment for the IIFE\n\nGenerate display update and hidden input sync JS functions.\n\nfrom cjm_fasthtml_token_selector.core.config import TokenSelectorConfig, _reset_prefix_counter\nfrom cjm_fasthtml_token_selector.core.html_ids import TokenSelectorHtmlIds\n\n_reset_prefix_counter()\n\ncfg = TokenSelectorConfig(prefix=\"t\", selection_mode=\"gap\")\nids = TokenSelectorHtmlIds(prefix=\"t\")\njs = generate_display_js(cfg, ids)\nassert \"ns.updateDisplay\" in js\nassert \"ns.updateInputs\" in js\nassert \"t-anchor\" in js\nassert \"t-focus\" in js\nassert \"caret-indicator\" in js\nprint(\"Gap display JS generated!\")\n\ncfg_w = TokenSelectorConfig(prefix=\"tw\", selection_mode=\"word\")\nids_w = TokenSelectorHtmlIds(prefix=\"tw\")\njs_w = generate_display_js(cfg_w, ids_w)\nassert HIGHLIGHT_CLS in js_w\nprint(\"Word display JS generated!\")\n\ncfg_s = TokenSelectorConfig(prefix=\"ts\", selection_mode=\"span\")\nids_s = TokenSelectorHtmlIds(prefix=\"ts\")\njs_s = generate_display_js(cfg_s, ids_s)\nassert HIGHLIGHT_CLS in js_s\nassert \"caret-indicator\" in js_s\nprint(\"Span display JS generated!\")\n\n_reset_prefix_counter()\nprint(\"All display JS tests passed!\")\n\nGap display JS generated!\nWord display JS generated!\nSpan display JS generated!\nAll display JS tests passed!",
+    "crumbs": [
+      "js",
+      "Display JS"
+    ]
+  },
+  {
+    "objectID": "js/core.html",
+    "href": "js/core.html",
+    "title": "Core JS",
+    "section": "",
+    "text": "def global_callback_name(\n    prefix:str, # token selector instance prefix\n    callback:str, # base callback name\n)-&gt;str: # global function name\n\nGenerate a prefix-unique global callback name.\n\nassert global_callback_name(\"ts0\", \"activate\") == \"ts0_activate\"\nassert global_callback_name(\"my-split\", \"deactivate\") == \"my-split_deactivate\"\nprint(\"global_callback_name tests passed!\")\n\nglobal_callback_name tests passed!",
+    "crumbs": [
+      "js",
+      "Core JS"
+    ]
+  },
+  {
+    "objectID": "js/core.html#global-callback-names",
+    "href": "js/core.html#global-callback-names",
+    "title": "Core JS",
+    "section": "",
+    "text": "def global_callback_name(\n    prefix:str, # token selector instance prefix\n    callback:str, # base callback name\n)-&gt;str: # global function name\n\nGenerate a prefix-unique global callback name.\n\nassert global_callback_name(\"ts0\", \"activate\") == \"ts0_activate\"\nassert global_callback_name(\"my-split\", \"deactivate\") == \"my-split_deactivate\"\nprint(\"global_callback_name tests passed!\")\n\nglobal_callback_name tests passed!",
+    "crumbs": [
+      "js",
+      "Core JS"
+    ]
+  },
+  {
+    "objectID": "js/core.html#iife-sub-generators",
+    "href": "js/core.html#iife-sub-generators",
+    "title": "Core JS",
+    "section": "IIFE Sub-Generators",
+    "text": "IIFE Sub-Generators",
+    "crumbs": [
+      "js",
+      "Core JS"
+    ]
+  },
+  {
+    "objectID": "js/core.html#master-composer",
+    "href": "js/core.html#master-composer",
+    "title": "Core JS",
+    "section": "Master Composer",
+    "text": "Master Composer\n\n\ngenerate_token_selector_js\n\ndef generate_token_selector_js(\n    config:TokenSelectorConfig, # config for this instance\n    ids:TokenSelectorHtmlIds, # HTML IDs\n    state:TokenSelectorState=None, # initial state\n    extra_scripts:Tuple=(), # additional JS to include in the IIFE\n)-&gt;Any: # Script element with the complete IIFE\n\nCompose all token selector JS into a single namespaced IIFE.\n\nfrom cjm_fasthtml_token_selector.core.config import TokenSelectorConfig, _reset_prefix_counter\nfrom cjm_fasthtml_token_selector.core.models import TokenSelectorState\nfrom cjm_fasthtml_token_selector.core.html_ids import TokenSelectorHtmlIds\n\n_reset_prefix_counter()\n\ncfg = TokenSelectorConfig(prefix=\"ts0\")\nids = TokenSelectorHtmlIds(prefix=\"ts0\")\nstate = TokenSelectorState(anchor=3, focus=3, word_count=10)\n\nscript = generate_token_selector_js(cfg, ids, state)\nassert script is not None\n\n# Verify IIFE structure via string representation\njs_str = str(script)\nassert \"window.tokenSelectors\" in js_str\nassert \"ts0\" in js_str\nassert \"ns.activate\" in js_str\nassert \"ns.deactivate\" in js_str\nassert \"ns.moveLeft\" in js_str\nassert \"ns._handleKeyDown\" in js_str\nassert \"ts0_activate\" in js_str\n# Settle handler uses replace pattern (removeEventListener + addEventListener)\nassert \"_tsSettleHandler_ts0\" in js_str\nassert \"removeEventListener\" in js_str\nprint(\"IIFE structure verified!\")\n\n# With extra scripts\nscript2 = generate_token_selector_js(cfg, ids, state, extra_scripts=(\"ns.customFn = function() {};\",))\nassert \"ns.customFn\" in str(script2)\nprint(\"Extra scripts injection verified!\")\n\n# Multi-instance: different prefixes don't collide\ncfg2 = TokenSelectorConfig(prefix=\"ts1\")\nids2 = TokenSelectorHtmlIds(prefix=\"ts1\")\nscript3 = generate_token_selector_js(cfg2, ids2)\njs_str3 = str(script3)\nassert \"ts1\" in js_str3\nassert \"ts0\" not in js_str3\nprint(\"Multi-instance isolation verified!\")\n\n# Default state when none provided\nscript4 = generate_token_selector_js(cfg, ids)\nassert script4 is not None\nprint(\"Default state fallback verified!\")\n\n_reset_prefix_counter()\nprint(\"All JS core tests passed!\")\n\nIIFE structure verified!\nExtra scripts injection verified!\nMulti-instance isolation verified!\nDefault state fallback verified!\nAll JS core tests passed!",
+    "crumbs": [
+      "js",
+      "Core JS"
+    ]
+  },
+  {
+    "objectID": "helpers/tokenizer.html",
+    "href": "helpers/tokenizer.html",
+    "title": "Tokenizer",
+    "section": "",
+    "text": "def count_tokens(\n    text:str, # text to count tokens in\n)-&gt;int: # token count\n\nCount the number of whitespace-delimited tokens in text.\n\nassert count_tokens(\"\") == 0\nassert count_tokens(\"hello\") == 1\nassert count_tokens(\"hello world\") == 2\nassert count_tokens(\"  spaced  out  \") == 2\nprint(\"count_tokens tests passed!\")\n\ncount_tokens tests passed!\n\n\n\n\n\n\n\ndef get_token_list(\n    text:str, # text to split into tokens\n)-&gt;List: # list of token strings\n\nSplit text into a list of whitespace-delimited tokens.\n\nassert get_token_list(\"\") == []\nassert get_token_list(\"hello world\") == [\"hello\", \"world\"]\nassert get_token_list(\"  spaced  out  \") == [\"spaced\", \"out\"]\nprint(\"get_token_list tests passed!\")\n\nget_token_list tests passed!",
+    "crumbs": [
+      "helpers",
+      "Tokenizer"
+    ]
+  },
+  {
+    "objectID": "helpers/tokenizer.html#basic-utilities",
+    "href": "helpers/tokenizer.html#basic-utilities",
+    "title": "Tokenizer",
+    "section": "",
+    "text": "def count_tokens(\n    text:str, # text to count tokens in\n)-&gt;int: # token count\n\nCount the number of whitespace-delimited tokens in text.\n\nassert count_tokens(\"\") == 0\nassert count_tokens(\"hello\") == 1\nassert count_tokens(\"hello world\") == 2\nassert count_tokens(\"  spaced  out  \") == 2\nprint(\"count_tokens tests passed!\")\n\ncount_tokens tests passed!\n\n\n\n\n\n\n\ndef get_token_list(\n    text:str, # text to split into tokens\n)-&gt;List: # list of token strings\n\nSplit text into a list of whitespace-delimited tokens.\n\nassert get_token_list(\"\") == []\nassert get_token_list(\"hello world\") == [\"hello\", \"world\"]\nassert get_token_list(\"  spaced  out  \") == [\"spaced\", \"out\"]\nprint(\"get_token_list tests passed!\")\n\nget_token_list tests passed!",
+    "crumbs": [
+      "helpers",
+      "Tokenizer"
+    ]
+  },
+  {
+    "objectID": "helpers/tokenizer.html#token-index-to-character-position",
+    "href": "helpers/tokenizer.html#token-index-to-character-position",
+    "title": "Tokenizer",
+    "section": "Token Index to Character Position",
+    "text": "Token Index to Character Position\n\n\ntoken_index_to_char_position\n\ndef token_index_to_char_position(\n    text:str, # full text string\n    token_index:int, # 0-based token index\n)-&gt;int: # character position for split\n\nConvert a token index to the character position where a split should occur.\n\n# Basic cases\nassert token_index_to_char_position(\"hello world\", 0) == 0\nassert token_index_to_char_position(\"hello world\", 1) == 6\nassert token_index_to_char_position(\"hello world\", 2) == 11  # past end\n\n# Multi-word\nassert token_index_to_char_position(\"the quick brown fox\", 2) == 10\n\n# Multiple spaces\nassert token_index_to_char_position(\"hello  world\", 1) == 7\n\n# Negative index\nassert token_index_to_char_position(\"hello\", -1) == 0\n\nprint(\"token_index_to_char_position tests passed!\")\n\ntoken_index_to_char_position tests passed!",
+    "crumbs": [
+      "helpers",
+      "Tokenizer"
+    ]
+  },
+  {
+    "objectID": "helpers/tokenizer.html#tokenize",
+    "href": "helpers/tokenizer.html#tokenize",
+    "title": "Tokenizer",
+    "section": "Tokenize",
+    "text": "Tokenize\nConverts a raw text string or pre-tokenized list into Token objects.\n\n\ntokenize\n\ndef tokenize(\n    text_or_tokens:Union, # raw text string or pre-tokenized list\n    metadata:Optional=None, # per-token metadata (must match token count)\n)-&gt;List: # list of Token objects\n\nConvert text or a pre-tokenized list into Token objects.\n\n# From string\ntokens = tokenize(\"hello world\")\nassert len(tokens) == 2\nassert tokens[0].text == \"hello\" and tokens[0].index == 0\nassert tokens[1].text == \"world\" and tokens[1].index == 1\nassert tokens[0].metadata is None\n\n# From pre-tokenized list\ntokens = tokenize([\"pre\", \"tokenized\", \"list\"])\nassert len(tokens) == 3\nassert tokens[2].text == \"list\" and tokens[2].index == 2\n\n# With metadata\ntokens = tokenize(\"hello world\", metadata=[\"noun\", \"noun\"])\nassert tokens[0].metadata == \"noun\"\nassert tokens[1].metadata == \"noun\"\n\n# Empty\nassert tokenize(\"\") == []\nassert tokenize([]) == []\n\n# Metadata length mismatch\ntry:\n    tokenize(\"hello world\", metadata=[\"noun\"])\n    assert False, \"Should have raised ValueError\"\nexcept ValueError:\n    pass\n\nprint(\"tokenize tests passed!\")\n\ntokenize tests passed!",
+    "crumbs": [
+      "helpers",
+      "Tokenizer"
+    ]
+  },
+  {
+    "objectID": "core/constants.html#css-class-constants",
+    "href": "core/constants.html#css-class-constants",
+    "title": "Constants",
+    "section": "CSS Class Constants",
+    "text": "CSS Class Constants",
+    "crumbs": [
+      "core",
+      "Constants"
+    ]
+  },
+  {
+    "objectID": "core/constants.html#key-repeat-timing-defaults",
+    "href": "core/constants.html#key-repeat-timing-defaults",
+    "title": "Constants",
+    "section": "Key Repeat Timing Defaults",
+    "text": "Key Repeat Timing Defaults",
+    "crumbs": [
+      "core",
+      "Constants"
+    ]
+  },
+  {
+    "objectID": "core/constants.html#default-key-mappings",
+    "href": "core/constants.html#default-key-mappings",
+    "title": "Constants",
+    "section": "Default Key Mappings",
+    "text": "Default Key Mappings",
+    "crumbs": [
+      "core",
+      "Constants"
+    ]
+  },
+  {
+    "objectID": "core/constants.html#display-defaults",
+    "href": "core/constants.html#display-defaults",
+    "title": "Constants",
+    "section": "Display Defaults",
+    "text": "Display Defaults",
+    "crumbs": [
+      "core",
+      "Constants"
+    ]
+  },
+  {
+    "objectID": "core/constants.html#tests",
+    "href": "core/constants.html#tests",
+    "title": "Constants",
+    "section": "Tests",
+    "text": "Tests\n\nassert isinstance(OPACITY_50_CLS, str) and len(OPACITY_50_CLS) &gt; 0\nassert \"caret-indicator\" in CARET_INDICATOR_CLS\nassert \"animate-pulse\" in CARET_INDICATOR_CLS\nassert isinstance(HIGHLIGHT_CLS, str) and len(HIGHLIGHT_CLS) &gt; 0\nassert DEFAULT_INITIAL_DELAY &gt; 0\nassert DEFAULT_REPEAT_INTERVAL &gt; 0\nassert DEFAULT_THROTTLE_FLOOR &gt; 0\nprint(f\"OPACITY_50_CLS: {OPACITY_50_CLS!r}\")\nprint(f\"CARET_INDICATOR_CLS: {CARET_INDICATOR_CLS!r}\")\nprint(f\"HIGHLIGHT_CLS: {HIGHLIGHT_CLS!r}\")\nprint(\"All constants tests passed!\")\n\nOPACITY_50_CLS: 'opacity-50'\nCARET_INDICATOR_CLS: 'caret-indicator w-0.5 h-5 bg-error absolute -left-1 top-1/2 -translate-y-1/2 animate-pulse'\nHIGHLIGHT_CLS: 'bg-primary/20'\nAll constants tests passed!",
+    "crumbs": [
+      "core",
+      "Constants"
+    ]
+  },
+  {
+    "objectID": "core/html_ids.html",
+    "href": "core/html_ids.html",
+    "title": "HTML IDs",
+    "section": "",
+    "text": "TokenSelectorHtmlIds\n\ndef TokenSelectorHtmlIds(\n    prefix:str\n)-&gt;None:\n\nPrefix-based HTML ID generator for token selector DOM elements.\n\nids = TokenSelectorHtmlIds(prefix=\"ts0\")\nassert ids.container == \"ts0-token-selector\"\nassert ids.token_grid == \"ts0-token-grid\"\nassert ids.anchor_input == \"ts0-anchor\"\nassert ids.focus_input == \"ts0-focus\"\nassert ids.anchor_name == \"ts0_anchor\"\nassert ids.focus_name == \"ts0_focus\"\nassert ids.token(3) == \"ts0-token-3\"\nassert ids.token(0) == \"ts0-token-0\"\n\n# Different prefix\nids2 = TokenSelectorHtmlIds(prefix=\"my-split\")\nassert ids2.container == \"my-split-token-selector\"\nassert ids2.token_grid == \"my-split-token-grid\"\nassert ids2.anchor_name == \"my-split_anchor\"\nassert ids2.focus_name == \"my-split_focus\"\n\n# No collision\nassert ids.container != ids2.container\nassert ids.token_grid != ids2.token_grid\nassert ids.anchor_name != ids2.anchor_name\n\n# IDs use hyphens, names use underscores\nassert \"-\" in ids.anchor_input\nassert \"_\" in ids.anchor_name\n\nprint(\"TokenSelectorHtmlIds tests passed!\")\n\nTokenSelectorHtmlIds tests passed!",
+    "crumbs": [
+      "core",
+      "HTML IDs"
+    ]
+  },
+  {
+    "objectID": "components/inputs.html",
+    "href": "components/inputs.html",
+    "title": "Inputs",
+    "section": "",
+    "text": "render_hidden_inputs\n\ndef render_hidden_inputs(\n    ids:TokenSelectorHtmlIds, # HTML IDs for this instance\n    state:Optional=None, # current state\n    oob:bool=False, # render with hx-swap-oob\n)-&gt;Any: # tuple of anchor and focus hidden inputs\n\nRender hidden inputs for HTMX form submission.\n\n\n\nbuild_include_selector\n\ndef build_include_selector(\n    ids:TokenSelectorHtmlIds, # HTML IDs for this instance\n)-&gt;str: # CSS selector string for hx_include\n\nBuild a CSS selector for including anchor and focus inputs in HTMX requests.\n\nfrom cjm_fasthtml_token_selector.core.models import TokenSelectorState\nfrom cjm_fasthtml_token_selector.core.html_ids import TokenSelectorHtmlIds\n\nids = TokenSelectorHtmlIds(prefix=\"ts0\")\nstate = TokenSelectorState(anchor=3, focus=7)\n\ninputs = render_hidden_inputs(ids, state)\nassert len(inputs) == 2\nprint(\"render_hidden_inputs test passed!\")\n\nselector = build_include_selector(ids)\nassert \"#ts0-anchor\" in selector\nassert \"#ts0-focus\" in selector\nprint(f\"Include selector: {selector}\")\nprint(\"build_include_selector test passed!\")\n\nrender_hidden_inputs test passed!\nInclude selector: #ts0-anchor, #ts0-focus\nbuild_include_selector test passed!",
+    "crumbs": [
+      "components",
+      "Inputs"
+    ]
+  },
+  {
+    "objectID": "keyboard/actions.html",
+    "href": "keyboard/actions.html",
+    "title": "Keyboard Actions",
+    "section": "",
+    "text": "def create_token_selector_mode(\n    config:TokenSelectorConfig, # config for this instance\n    mode_name:str='token-select', # mode name for the keyboard nav system\n    indicator_text:str='Token Select', # mode indicator text\n    exit_key:str='', # exit key (empty = programmatic only via Escape KeyAction)\n    exit_on_zone_change:bool=False, # whether to exit on zone change\n)-&gt;KeyboardMode: # configured keyboard mode\n\nCreate a keyboard mode that activates/deactivates the token selector.\n\nfrom cjm_fasthtml_token_selector.core.config import _reset_prefix_counter\n\n_reset_prefix_counter()\ncfg = TokenSelectorConfig(prefix=\"ts0\")\n\nmode = create_token_selector_mode(cfg)\nassert mode.name == \"token-select\"\nassert mode.on_enter == \"ts0_activate\"\nassert mode.on_exit == \"ts0_deactivate\"\nassert mode.indicator_text == \"Token Select\"\nassert mode.exit_key == \"\"\n\n# Custom mode name\nmode2 = create_token_selector_mode(cfg, mode_name=\"split\", indicator_text=\"Split Mode\")\nassert mode2.name == \"split\"\nassert mode2.indicator_text == \"Split Mode\"\n\n_reset_prefix_counter()\nprint(\"create_token_selector_mode tests passed!\")\n\ncreate_token_selector_mode tests passed!",
+    "crumbs": [
+      "keyboard",
+      "Keyboard Actions"
+    ]
+  },
+  {
+    "objectID": "keyboard/actions.html#token-selector-mode",
+    "href": "keyboard/actions.html#token-selector-mode",
+    "title": "Keyboard Actions",
+    "section": "",
+    "text": "def create_token_selector_mode(\n    config:TokenSelectorConfig, # config for this instance\n    mode_name:str='token-select', # mode name for the keyboard nav system\n    indicator_text:str='Token Select', # mode indicator text\n    exit_key:str='', # exit key (empty = programmatic only via Escape KeyAction)\n    exit_on_zone_change:bool=False, # whether to exit on zone change\n)-&gt;KeyboardMode: # configured keyboard mode\n\nCreate a keyboard mode that activates/deactivates the token selector.\n\nfrom cjm_fasthtml_token_selector.core.config import _reset_prefix_counter\n\n_reset_prefix_counter()\ncfg = TokenSelectorConfig(prefix=\"ts0\")\n\nmode = create_token_selector_mode(cfg)\nassert mode.name == \"token-select\"\nassert mode.on_enter == \"ts0_activate\"\nassert mode.on_exit == \"ts0_deactivate\"\nassert mode.indicator_text == \"Token Select\"\nassert mode.exit_key == \"\"\n\n# Custom mode name\nmode2 = create_token_selector_mode(cfg, mode_name=\"split\", indicator_text=\"Split Mode\")\nassert mode2.name == \"split\"\nassert mode2.indicator_text == \"Split Mode\"\n\n_reset_prefix_counter()\nprint(\"create_token_selector_mode tests passed!\")\n\ncreate_token_selector_mode tests passed!",
+    "crumbs": [
+      "keyboard",
+      "Keyboard Actions"
+    ]
+  },
+  {
+    "objectID": "keyboard/actions.html#navigation-actions",
+    "href": "keyboard/actions.html#navigation-actions",
+    "title": "Keyboard Actions",
+    "section": "Navigation Actions",
+    "text": "Navigation Actions\nNon-movement keyboard actions. Movement keys (Left/Right) are handled by the token selector’s own key repeat engine, not by KeyAction.\n\n\ncreate_token_nav_actions\n\ndef create_token_nav_actions(\n    config:TokenSelectorConfig, # config for this instance\n    zone_id:str, # focus zone ID\n    mode_name:str='token-select', # mode name (must match the mode)\n    confirm_button_id:str='', # HTMX button ID for confirm action\n    cancel_button_id:str='', # HTMX button ID for cancel action\n)-&gt;Tuple: # non-movement keyboard actions\n\nCreate keyboard actions for the token selector.\n\n_reset_prefix_counter()\ncfg = TokenSelectorConfig(prefix=\"ts0\")\n\nactions = create_token_nav_actions(\n    cfg, zone_id=\"my-zone\",\n    confirm_button_id=\"confirm-btn\",\n    cancel_button_id=\"cancel-btn\",\n)\n\n# Should have: Enter, Space, Escape, Home, End = 5 actions\nassert len(actions) == 5\n\n# No ArrowLeft/ArrowRight\nkeys = {a.key for a in actions}\nassert \"ArrowLeft\" not in keys\nassert \"ArrowRight\" not in keys\nassert \"Enter\" in keys\nassert \"Escape\" in keys\nassert \"Home\" in keys\nassert \"End\" in keys\n\n# Home uses js_callback\nhome_action = [a for a in actions if a.key == \"Home\"][0]\nassert home_action.js_callback == \"ts0_moveToFirst\"\n\n# Without confirm/cancel\nactions_min = create_token_nav_actions(cfg, zone_id=\"z\")\nassert len(actions_min) == 2  # Home + End only\n\n_reset_prefix_counter()\nprint(\"create_token_nav_actions tests passed!\")\n\ncreate_token_nav_actions tests passed!",
+    "crumbs": [
+      "keyboard",
+      "Keyboard Actions"
+    ]
+  },
+  {
+    "objectID": "keyboard/actions.html#url-map-and-action-buttons",
+    "href": "keyboard/actions.html#url-map-and-action-buttons",
+    "title": "Keyboard Actions",
+    "section": "URL Map and Action Buttons",
+    "text": "URL Map and Action Buttons\n\n\nbuild_token_selector_url_map\n\ndef build_token_selector_url_map(\n    confirm_button_id:str, # button ID for confirm action\n    cancel_button_id:str, # button ID for cancel action\n    confirm_url:str, # URL for confirm action\n    cancel_url:str, # URL for cancel action\n)-&gt;Dict: # button ID -&gt; URL mapping\n\nBuild URL map for keyboard system with token selector action buttons.\n\n\n\nrender_token_action_buttons\n\ndef render_token_action_buttons(\n    confirm_button_id:str, # button ID for confirm\n    cancel_button_id:str, # button ID for cancel\n    confirm_url:str, # URL for confirm action\n    cancel_url:str, # URL for cancel action\n    ids:TokenSelectorHtmlIds, # HTML IDs (for hx_include)\n    extra_include:str='', # additional hx_include selectors\n)-&gt;Any: # Div containing hidden action buttons\n\nRender hidden HTMX buttons for confirm/cancel actions.\n\nids = TokenSelectorHtmlIds(prefix=\"ts0\")\n\nurl_map = build_token_selector_url_map(\"confirm-btn\", \"cancel-btn\", \"/confirm\", \"/cancel\")\nassert url_map[\"confirm-btn\"] == \"/confirm\"\nassert url_map[\"cancel-btn\"] == \"/cancel\"\nprint(\"build_token_selector_url_map test passed!\")\n\nbtns = render_token_action_buttons(\"confirm-btn\", \"cancel-btn\", \"/confirm\", \"/cancel\", ids)\nassert btns is not None\nprint(\"render_token_action_buttons test passed!\")\n\nbuild_token_selector_url_map test passed!\nrender_token_action_buttons test passed!",
+    "crumbs": [
+      "keyboard",
+      "Keyboard Actions"
+    ]
+  },
+  {
+    "objectID": "components/tokens.html",
+    "href": "components/tokens.html",
+    "title": "Tokens",
+    "section": "",
+    "text": "Determine token visual state based on selection mode and position.\n\n# Gap mode: no tokens selected\nassert _is_token_selected(0, \"gap\", 0, 0) is False\nassert _is_token_selected(5, \"gap\", 5, 5) is False\n\n# Word mode: only anchor token\nassert _is_token_selected(3, \"word\", 3, 3) is True\nassert _is_token_selected(2, \"word\", 3, 3) is False\n\n# Span mode: range inclusive\nassert _is_token_selected(3, \"span\", 2, 5) is True\nassert _is_token_selected(2, \"span\", 2, 5) is True\nassert _is_token_selected(5, \"span\", 2, 5) is True\nassert _is_token_selected(1, \"span\", 2, 5) is False\nassert _is_token_selected(6, \"span\", 2, 5) is False\n# Reversed anchor/focus\nassert _is_token_selected(3, \"span\", 5, 2) is True\n\nprint(\"_is_token_selected tests passed!\")\n\n_is_token_selected tests passed!",
+    "crumbs": [
+      "components",
+      "Tokens"
+    ]
+  },
+  {
+    "objectID": "components/tokens.html#selection-helpers",
+    "href": "components/tokens.html#selection-helpers",
+    "title": "Tokens",
+    "section": "",
+    "text": "Determine token visual state based on selection mode and position.\n\n# Gap mode: no tokens selected\nassert _is_token_selected(0, \"gap\", 0, 0) is False\nassert _is_token_selected(5, \"gap\", 5, 5) is False\n\n# Word mode: only anchor token\nassert _is_token_selected(3, \"word\", 3, 3) is True\nassert _is_token_selected(2, \"word\", 3, 3) is False\n\n# Span mode: range inclusive\nassert _is_token_selected(3, \"span\", 2, 5) is True\nassert _is_token_selected(2, \"span\", 2, 5) is True\nassert _is_token_selected(5, \"span\", 2, 5) is True\nassert _is_token_selected(1, \"span\", 2, 5) is False\nassert _is_token_selected(6, \"span\", 2, 5) is False\n# Reversed anchor/focus\nassert _is_token_selected(3, \"span\", 5, 2) is True\n\nprint(\"_is_token_selected tests passed!\")\n\n_is_token_selected tests passed!",
+    "crumbs": [
+      "components",
+      "Tokens"
+    ]
+  },
+  {
+    "objectID": "components/tokens.html#caret-indicator",
+    "href": "components/tokens.html#caret-indicator",
+    "title": "Tokens",
+    "section": "Caret Indicator",
+    "text": "Caret Indicator",
+    "crumbs": [
+      "components",
+      "Tokens"
+    ]
+  },
+  {
+    "objectID": "components/tokens.html#token-rendering",
+    "href": "components/tokens.html#token-rendering",
+    "title": "Tokens",
+    "section": "Token Rendering",
+    "text": "Token Rendering\n\n\nrender_token\n\ndef render_token(\n    token:Token, # token to render\n    config:TokenSelectorConfig, # config for this instance\n    ids:TokenSelectorHtmlIds, # HTML IDs\n    state:Optional=None, # current state for highlighting\n    style_callback:Optional=None, # (TokenRenderContext) -&gt; str for extra CSS\n    read_only:bool=False, # disable interaction\n)-&gt;Any: # Span element for this token\n\nRender a single interactive word token.\n\nfrom cjm_fasthtml_token_selector.core.config import _reset_prefix_counter\n\n_reset_prefix_counter()\ncfg = TokenSelectorConfig(prefix=\"test\")\ntest_ids = TokenSelectorHtmlIds(prefix=\"test\")\nt = Token(\"hello\", 0)\ns = TokenSelectorState(anchor=0, focus=0, word_count=5)\n\n# Basic render\nel = render_token(t, cfg, test_ids, s)\nassert el is not None\nprint(\"render_token basic test passed!\")\n\n# Read-only: no onclick\nel_ro = render_token(t, cfg, test_ids, s, read_only=True)\nassert el_ro is not None\nprint(\"render_token read_only test passed!\")\n\nrender_token basic test passed!\nrender_token read_only test passed!",
+    "crumbs": [
+      "components",
+      "Tokens"
+    ]
+  },
+  {
+    "objectID": "components/tokens.html#end-token",
+    "href": "components/tokens.html#end-token",
+    "title": "Tokens",
+    "section": "End Token",
+    "text": "End Token\n\n\nrender_end_token\n\ndef render_end_token(\n    config:TokenSelectorConfig, # config for this instance\n    ids:TokenSelectorHtmlIds, # HTML IDs\n    state:Optional=None, # current state\n    read_only:bool=False, # disable interaction\n)-&gt;Any: # end sentinel Span element\n\nRender the end-of-text sentinel token.\n\n_reset_prefix_counter()\ncfg = TokenSelectorConfig(prefix=\"test\")\ntest_ids = TokenSelectorHtmlIds(prefix=\"test\")\ns = TokenSelectorState(anchor=5, focus=5, word_count=5)\n\nel = render_end_token(cfg, test_ids, s)\nassert el is not None\nprint(\"render_end_token test passed!\")\n\nrender_end_token test passed!",
+    "crumbs": [
+      "components",
+      "Tokens"
+    ]
+  },
+  {
+    "objectID": "components/tokens.html#token-grid",
+    "href": "components/tokens.html#token-grid",
+    "title": "Tokens",
+    "section": "Token Grid",
+    "text": "Token Grid\n\n\nrender_token_grid\n\ndef render_token_grid(\n    tokens:List, # token list to render\n    config:TokenSelectorConfig, # config for this instance\n    ids:TokenSelectorHtmlIds, # HTML IDs\n    state:Optional=None, # current state for highlighting\n    style_callback:Optional=None, # (TokenRenderContext) -&gt; str for extra CSS\n    read_only:bool=False, # disable all interaction\n)-&gt;Any: # Div containing the complete token grid\n\nRender the full interactive token grid.\n\nfrom cjm_fasthtml_token_selector.helpers.tokenizer import tokenize\n\n_reset_prefix_counter()\ncfg = TokenSelectorConfig(prefix=\"test\")\ntest_ids = TokenSelectorHtmlIds(prefix=\"test\")\ntokens = tokenize(\"the quick brown fox\")\ns = TokenSelectorState(anchor=2, focus=2, word_count=4)\n\ngrid = render_token_grid(tokens, cfg, test_ids, s)\nassert grid is not None\nprint(\"render_token_grid test passed!\")\n\n# Read-only\ngrid_ro = render_token_grid(tokens, cfg, test_ids, read_only=True)\nassert grid_ro is not None\nprint(\"render_token_grid read_only test passed!\")\n\n# Word mode\ncfg_word = TokenSelectorConfig(prefix=\"test-w\", selection_mode=\"word\")\nids_word = TokenSelectorHtmlIds(prefix=\"test-w\")\ns_word = TokenSelectorState(anchor=1, focus=1, word_count=4)\ngrid_word = render_token_grid(tokens, cfg_word, ids_word, s_word)\nassert grid_word is not None\nprint(\"render_token_grid word mode test passed!\")\n\n# Span mode\ncfg_span = TokenSelectorConfig(prefix=\"test-s\", selection_mode=\"span\")\nids_span = TokenSelectorHtmlIds(prefix=\"test-s\")\ns_span = TokenSelectorState(anchor=1, focus=3, word_count=4)\ngrid_span = render_token_grid(tokens, cfg_span, ids_span, s_span)\nassert grid_span is not None\nprint(\"render_token_grid span mode test passed!\")\n\nrender_token_grid test passed!\nrender_token_grid read_only test passed!\nrender_token_grid word mode test passed!\nrender_token_grid span mode test passed!",
+    "crumbs": [
+      "components",
+      "Tokens"
+    ]
+  },
+  {
+    "objectID": "core/config.html",
+    "href": "core/config.html",
+    "title": "Config",
+    "section": "",
+    "text": "Auto-generates unique prefixes (ts0, ts1, …) for token selector instances when no explicit prefix is provided.\n\n_reset_prefix_counter()\nassert _auto_prefix() == \"ts0\"\nassert _auto_prefix() == \"ts1\"\nassert _auto_prefix() == \"ts2\"\n_reset_prefix_counter()\nassert _auto_prefix() == \"ts0\"\nprint(\"Prefix counter tests passed!\")\n\nPrefix counter tests passed!",
+    "crumbs": [
+      "core",
+      "Config"
+    ]
+  },
+  {
+    "objectID": "core/config.html#prefix-counter",
+    "href": "core/config.html#prefix-counter",
+    "title": "Config",
+    "section": "",
+    "text": "Auto-generates unique prefixes (ts0, ts1, …) for token selector instances when no explicit prefix is provided.\n\n_reset_prefix_counter()\nassert _auto_prefix() == \"ts0\"\nassert _auto_prefix() == \"ts1\"\nassert _auto_prefix() == \"ts2\"\n_reset_prefix_counter()\nassert _auto_prefix() == \"ts0\"\nprint(\"Prefix counter tests passed!\")\n\nPrefix counter tests passed!",
+    "crumbs": [
+      "core",
+      "Config"
+    ]
+  },
+  {
+    "objectID": "core/config.html#tokenselectorconfig",
+    "href": "core/config.html#tokenselectorconfig",
+    "title": "Config",
+    "section": "TokenSelectorConfig",
+    "text": "TokenSelectorConfig\n\n\nTokenSelectorConfig\n\ndef TokenSelectorConfig(\n    prefix:str=&lt;factory&gt;, selection_mode:Literal='gap', initial_delay:int=400, repeat_interval:int=80,\n    throttle_floor:int=50, left_key:str='ArrowLeft', right_key:str='ArrowRight', end_token_text:str='(End)',\n    show_end_token:bool=True, read_only:bool=False, wrap_navigation:bool=False, on_change_callback:str=''\n)-&gt;None:\n\nInitialization-time settings for a token selector instance.\n\n_reset_prefix_counter()\n\n# Auto-prefix\nc1 = TokenSelectorConfig()\nc2 = TokenSelectorConfig()\nassert c1.prefix == \"ts0\"\nassert c2.prefix == \"ts1\"\n\n# Explicit prefix\nc3 = TokenSelectorConfig(prefix=\"my-tokens\")\nassert c3.prefix == \"my-tokens\"\n\n# Defaults\nassert c1.selection_mode == \"gap\"\nassert c1.initial_delay == DEFAULT_INITIAL_DELAY\nassert c1.left_key == \"ArrowLeft\"\nassert c1.show_end_token is True\nassert c1.read_only is False\nassert c1.on_change_callback == \"\"\n\n# Custom values\nc4 = TokenSelectorConfig(prefix=\"wasd\", selection_mode=\"span\", left_key=\"a\", right_key=\"d\")\nassert c4.selection_mode == \"span\"\nassert c4.left_key == \"a\"\nassert c4.right_key == \"d\"\n\n_reset_prefix_counter()\nprint(\"TokenSelectorConfig tests passed!\")\n\nTokenSelectorConfig tests passed!",
+    "crumbs": [
+      "core",
+      "Config"
+    ]
+  },
+  {
+    "objectID": "core/models.html",
+    "href": "core/models.html",
+    "title": "Models",
+    "section": "",
+    "text": "def Token(\n    text:str, index:int, metadata:Any=None\n)-&gt;None:\n\nA single token in the token grid.\n\nt = Token(\"hello\", 0)\nassert t.text == \"hello\"\nassert t.index == 0\nassert t.metadata is None\n\nt_meta = Token(\"world\", 1, metadata={\"confidence\": 0.95})\nassert t_meta.metadata[\"confidence\"] == 0.95\nprint(\"Token tests passed!\")\n\nToken tests passed!",
+    "crumbs": [
+      "core",
+      "Models"
+    ]
+  },
+  {
+    "objectID": "core/models.html#token",
+    "href": "core/models.html#token",
+    "title": "Models",
+    "section": "",
+    "text": "def Token(\n    text:str, index:int, metadata:Any=None\n)-&gt;None:\n\nA single token in the token grid.\n\nt = Token(\"hello\", 0)\nassert t.text == \"hello\"\nassert t.index == 0\nassert t.metadata is None\n\nt_meta = Token(\"world\", 1, metadata={\"confidence\": 0.95})\nassert t_meta.metadata[\"confidence\"] == 0.95\nprint(\"Token tests passed!\")\n\nToken tests passed!",
+    "crumbs": [
+      "core",
+      "Models"
+    ]
+  },
+  {
+    "objectID": "core/models.html#tokenrendercontext",
+    "href": "core/models.html#tokenrendercontext",
+    "title": "Models",
+    "section": "TokenRenderContext",
+    "text": "TokenRenderContext\n\n\nTokenRenderContext\n\ndef TokenRenderContext(\n    token:Token, is_selected:bool, is_anchor:bool, is_focus:bool, selection_mode:str\n)-&gt;None:\n\nContext passed to per-token styling callbacks.\n\nt = Token(\"test\", 0)\nctx = TokenRenderContext(token=t, is_selected=True, is_anchor=True, is_focus=True, selection_mode=\"word\")\nassert ctx.is_selected is True\nassert ctx.selection_mode == \"word\"\nprint(\"TokenRenderContext tests passed!\")\n\nTokenRenderContext tests passed!",
+    "crumbs": [
+      "core",
+      "Models"
+    ]
+  },
+  {
+    "objectID": "core/models.html#tokenselectorstate",
+    "href": "core/models.html#tokenselectorstate",
+    "title": "Models",
+    "section": "TokenSelectorState",
+    "text": "TokenSelectorState\n\n\nTokenSelectorState\n\ndef TokenSelectorState(\n    anchor:int=0, focus:int=0, word_count:int=0, active:bool=False\n)-&gt;None:\n\nMutable runtime state for a token selector instance.\n\ns = TokenSelectorState()\nassert s.anchor == 0\nassert s.focus == 0\nassert s.word_count == 0\nassert s.active is False\n\n# Mutable\ns.anchor = 5\ns.focus = 8\ns.word_count = 20\nassert s.anchor == 5\nassert s.focus == 8\n\n# Span selection state\ns_span = TokenSelectorState(anchor=3, focus=7, word_count=20)\nassert s_span.anchor != s_span.focus\n\nprint(\"TokenSelectorState tests passed!\")\n\nTokenSelectorState tests passed!",
+    "crumbs": [
+      "core",
+      "Models"
+    ]
+  },
+  {
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "cjm-fasthtml-token-selector",
+    "section": "",
+    "text": "pip install cjm_fasthtml_token_selector",
+    "crumbs": [
+      "cjm-fasthtml-token-selector"
+    ]
+  },
+  {
+    "objectID": "index.html#install",
+    "href": "index.html#install",
+    "title": "cjm-fasthtml-token-selector",
+    "section": "",
+    "text": "pip install cjm_fasthtml_token_selector",
+    "crumbs": [
+      "cjm-fasthtml-token-selector"
+    ]
+  },
+  {
+    "objectID": "index.html#project-structure",
+    "href": "index.html#project-structure",
+    "title": "cjm-fasthtml-token-selector",
+    "section": "Project Structure",
+    "text": "Project Structure\nnbs/\n├── components/ (2)\n│   ├── inputs.ipynb  # Hidden input rendering for HTMX state sync.\n│   └── tokens.ipynb  # Token grid rendering for all three selection modes (gap, word, span).\n├── core/ (4)\n│   ├── config.ipynb     # Configuration dataclass for token selector initialization.\n│   ├── constants.ipynb  # CSS class constants, selection mode type, timing defaults, and key defaults for the token selector.\n│   ├── html_ids.ipynb   # Prefix-based HTML ID generator for token selector DOM elements.\n│   └── models.ipynb     # Data models for tokens, render context, and mutable runtime state.\n├── helpers/ (1)\n│   └── tokenizer.ipynb  # Tokenization utilities for splitting text into tokens and converting between token indices and character positions.\n├── js/ (4)\n│   ├── core.ipynb        # Master IIFE composer for the token selector JS runtime.\n│   ├── display.ipynb     # Generates JS functions for updating token display state (caret indicators, highlights, dimming, hidden inputs).\n│   ├── navigation.ipynb  # Generates mode-specific navigation and selection JS functions.\n│   └── repeat.ipynb      # Custom key repeat engine with configurable initial delay, repeat interval, and throttle floor.\n└── keyboard/ (1)\n    └── actions.ipynb  # Keyboard navigation library integration factories for token selector mode, actions, URL maps, and hidden action buttons.\nTotal: 12 notebooks across 5 directories",
+    "crumbs": [
+      "cjm-fasthtml-token-selector"
+    ]
+  },
+  {
+    "objectID": "index.html#module-dependencies",
+    "href": "index.html#module-dependencies",
+    "title": "cjm-fasthtml-token-selector",
+    "section": "Module Dependencies",
+    "text": "Module Dependencies\ngraph LR\n    components_inputs[components.inputs&lt;br/&gt;Inputs]\n    components_tokens[components.tokens&lt;br/&gt;Tokens]\n    core_config[core.config&lt;br/&gt;Config]\n    core_constants[core.constants&lt;br/&gt;Constants]\n    core_html_ids[core.html_ids&lt;br/&gt;HTML IDs]\n    core_models[core.models&lt;br/&gt;Models]\n    helpers_tokenizer[helpers.tokenizer&lt;br/&gt;Tokenizer]\n    js_core[js.core&lt;br/&gt;Core JS]\n    js_display[js.display&lt;br/&gt;Display JS]\n    js_navigation[js.navigation&lt;br/&gt;Navigation JS]\n    js_repeat[js.repeat&lt;br/&gt;Key Repeat JS]\n    keyboard_actions[keyboard.actions&lt;br/&gt;Keyboard Actions]\n\n    components_inputs --&gt; core_models\n    components_inputs --&gt; core_html_ids\n    components_tokens --&gt; core_constants\n    components_tokens --&gt; core_models\n    components_tokens --&gt; core_config\n    components_tokens --&gt; core_html_ids\n    components_tokens --&gt; helpers_tokenizer\n    core_config --&gt; core_constants\n    helpers_tokenizer --&gt; core_models\n    js_core --&gt; js_display\n    js_core --&gt; core_models\n    js_core --&gt; core_html_ids\n    js_core --&gt; core_config\n    js_core --&gt; js_repeat\n    js_core --&gt; js_navigation\n    js_display --&gt; core_constants\n    js_display --&gt; core_html_ids\n    js_display --&gt; core_config\n    js_navigation --&gt; core_config\n    js_navigation --&gt; core_html_ids\n    js_repeat --&gt; core_config\n    keyboard_actions --&gt; core_html_ids\n    keyboard_actions --&gt; core_config\n    keyboard_actions --&gt; js_core\n24 cross-module dependencies detected",
+    "crumbs": [
+      "cjm-fasthtml-token-selector"
+    ]
+  },
+  {
+    "objectID": "index.html#cli-reference",
+    "href": "index.html#cli-reference",
+    "title": "cjm-fasthtml-token-selector",
+    "section": "CLI Reference",
+    "text": "CLI Reference\nNo CLI commands found in this project.",
+    "crumbs": [
+      "cjm-fasthtml-token-selector"
+    ]
+  },
+  {
+    "objectID": "index.html#module-overview",
+    "href": "index.html#module-overview",
+    "title": "cjm-fasthtml-token-selector",
+    "section": "Module Overview",
+    "text": "Module Overview\nDetailed documentation for each module in the project:\n\nKeyboard Actions (actions.ipynb)\n\nKeyboard navigation library integration factories for token selector mode, actions, URL maps, and hidden action buttons.\n\n\nImport\nfrom cjm_fasthtml_token_selector.keyboard.actions import (\n    create_token_selector_mode,\n    create_token_nav_actions,\n    build_token_selector_url_map,\n    render_token_action_buttons\n)\n\n\nFunctions\ndef create_token_selector_mode(\n    config:TokenSelectorConfig,         # config for this instance\n    mode_name:str = \"token-select\",     # mode name for the keyboard nav system\n    indicator_text:str = \"Token Select\", # mode indicator text\n    exit_key:str = \"\",                  # exit key (empty = programmatic only via Escape KeyAction)\n    exit_on_zone_change:bool = False,   # whether to exit on zone change\n) -&gt; KeyboardMode:  # configured keyboard mode\n    \"Create a keyboard mode that activates/deactivates the token selector.\"\ndef create_token_nav_actions(\n    config:TokenSelectorConfig,           # config for this instance\n    zone_id:str,                          # focus zone ID\n    mode_name:str = \"token-select\",       # mode name (must match the mode)\n    confirm_button_id:str = \"\",           # HTMX button ID for confirm action\n    cancel_button_id:str = \"\",            # HTMX button ID for cancel action\n) -&gt; Tuple[KeyAction, ...]:  # non-movement keyboard actions\n    \"Create keyboard actions for the token selector.\"\ndef build_token_selector_url_map(\n    confirm_button_id:str,  # button ID for confirm action\n    cancel_button_id:str,   # button ID for cancel action\n    confirm_url:str,        # URL for confirm action\n    cancel_url:str,         # URL for cancel action\n) -&gt; Dict[str, str]:  # button ID -&gt; URL mapping\n    \"Build URL map for keyboard system with token selector action buttons.\"\ndef render_token_action_buttons(\n    confirm_button_id:str,          # button ID for confirm\n    cancel_button_id:str,           # button ID for cancel\n    confirm_url:str,                # URL for confirm action\n    cancel_url:str,                 # URL for cancel action\n    ids:TokenSelectorHtmlIds,       # HTML IDs (for hx_include)\n    extra_include:str = \"\",         # additional hx_include selectors\n) -&gt; Any:  # Div containing hidden action buttons\n    \"Render hidden HTMX buttons for confirm/cancel actions.\"\n\n\n\nConfig (config.ipynb)\n\nConfiguration dataclass for token selector initialization.\n\n\nImport\nfrom cjm_fasthtml_token_selector.core.config import (\n    TokenSelectorConfig\n)\n\n\nFunctions\ndef _auto_prefix() -&gt; str: # unique prefix string\n    \"\"\"Generate an auto-incrementing unique prefix.\"\"\"\n    global _prefix_counter\n    p = f\"ts{_prefix_counter}\"\n    _prefix_counter += 1\n    return p\n\ndef _reset_prefix_counter() -&gt; None\n    \"Generate an auto-incrementing unique prefix.\"\ndef _reset_prefix_counter() -&gt; None\n    \"Reset the prefix counter (for testing only).\"\n\n\nClasses\n@dataclass\nclass TokenSelectorConfig:\n    \"Initialization-time settings for a token selector instance.\"\n    \n    prefix: str = field(...)  # unique instance prefix\n    selection_mode: SelectionMode = 'gap'  # selection behavior: \"gap\", \"word\", or \"span\"\n    initial_delay: int = DEFAULT_INITIAL_DELAY  # ms before first repeat\n    repeat_interval: int = DEFAULT_REPEAT_INTERVAL  # ms between repeats\n    throttle_floor: int = DEFAULT_THROTTLE_FLOOR  # minimum ms between movements\n    left_key: str = DEFAULT_LEFT_KEY  # key for leftward navigation\n    right_key: str = DEFAULT_RIGHT_KEY  # key for rightward navigation\n    end_token_text: str = DEFAULT_END_TOKEN_TEXT  # text for the sentinel end token\n    show_end_token: bool = True  # whether to show the end token\n    read_only: bool = False  # disable click/keyboard interaction\n    wrap_navigation: bool = False  # wrap around at boundaries\n    on_change_callback: str = ''  # JS function name called on selection change\n\n\nVariables\n_prefix_counter: int = 0\n\n\n\nConstants (constants.ipynb)\n\nCSS class constants, selection mode type, timing defaults, and key defaults for the token selector.\n\n\nImport\nfrom cjm_fasthtml_token_selector.core.constants import (\n    SelectionMode,\n    OPACITY_50_CLS,\n    CARET_INDICATOR_CLS,\n    HIGHLIGHT_CLS,\n    DEFAULT_INITIAL_DELAY,\n    DEFAULT_REPEAT_INTERVAL,\n    DEFAULT_THROTTLE_FLOOR,\n    DEFAULT_LEFT_KEY,\n    DEFAULT_RIGHT_KEY,\n    DEFAULT_END_TOKEN_TEXT\n)\n\n\nVariables\nOPACITY_50_CLS\nCARET_INDICATOR_CLS\nHIGHLIGHT_CLS\nDEFAULT_INITIAL_DELAY: int = 400\nDEFAULT_REPEAT_INTERVAL: int = 80\nDEFAULT_THROTTLE_FLOOR: int = 50\nDEFAULT_LEFT_KEY: str = 'ArrowLeft'\nDEFAULT_RIGHT_KEY: str = 'ArrowRight'\nDEFAULT_END_TOKEN_TEXT: str = '(End)'\n\n\n\nCore JS (core.ipynb)\n\nMaster IIFE composer for the token selector JS runtime.\n\n\nImport\nfrom cjm_fasthtml_token_selector.js.core import (\n    global_callback_name,\n    generate_token_selector_js\n)\n\n\nFunctions\ndef global_callback_name(\n    prefix:str,    # token selector instance prefix\n    callback:str,  # base callback name\n) -&gt; str:  # global function name\n    \"Generate a prefix-unique global callback name.\"\ndef _generate_state_init_js(\n    config:TokenSelectorConfig,  # config for this instance\n    state:TokenSelectorState,    # initial state\n) -&gt; str:  # JS code fragment\n    \"Generate state initialization code.\"\ndef _generate_on_change_js(\n    config:TokenSelectorConfig,  # config for this instance\n) -&gt; str:  # JS code fragment\n    \"Generate the on-change callback dispatcher.\"\ndef _generate_activation_js(\n    config:TokenSelectorConfig,  # config for this instance\n    ids:TokenSelectorHtmlIds,    # HTML IDs\n) -&gt; str:  # JS code fragment\n    \"Generate activate/deactivate functions.\"\ndef _generate_global_callbacks_js(\n    config:TokenSelectorConfig,  # config for this instance\n) -&gt; str:  # JS code fragment\n    \"Generate global callback wrappers.\"\ndef _generate_settle_handler_js(\n    config:TokenSelectorConfig,  # config for this instance\n    ids:TokenSelectorHtmlIds,    # HTML IDs\n) -&gt; str:  # JS code fragment\n    \"\"\"\n    Generate htmx:afterSettle handler for swap resilience.\n    \n    Stores the handler reference globally and replaces it on\n    re-initialization to avoid stale closure references when\n    the IIFE re-runs after HTMX page transitions.\n    \"\"\"\ndef generate_token_selector_js(\n    config:TokenSelectorConfig,              # config for this instance\n    ids:TokenSelectorHtmlIds,                # HTML IDs\n    state:TokenSelectorState = None,         # initial state\n    extra_scripts:Tuple[str, ...] = (),      # additional JS to include in the IIFE\n) -&gt; Any:  # Script element with the complete IIFE\n    \"Compose all token selector JS into a single namespaced IIFE.\"\n\n\nVariables\n_GLOBAL_CALLBACKS\n\n\n\nDisplay JS (display.ipynb)\n\nGenerates JS functions for updating token display state (caret indicators, highlights, dimming, hidden inputs).\n\n\nImport\nfrom cjm_fasthtml_token_selector.js.display import (\n    generate_display_js\n)\n\n\nFunctions\ndef _generate_update_inputs_js(\n    ids:TokenSelectorHtmlIds,  # HTML IDs\n) -&gt; str:  # JS code fragment\n    \"Generate the hidden input sync function.\"\ndef _generate_gap_display_js(\n    ids:TokenSelectorHtmlIds,  # HTML IDs\n) -&gt; str:  # JS code fragment\n    \"Generate gap mode display update function.\"\ndef _generate_word_display_js(\n    ids:TokenSelectorHtmlIds,  # HTML IDs\n) -&gt; str:  # JS code fragment\n    \"Generate word mode display update function.\"\ndef _generate_span_display_js(\n    ids:TokenSelectorHtmlIds,  # HTML IDs\n) -&gt; str:  # JS code fragment\n    \"Generate span mode display update function.\"\ndef generate_display_js(\n    config:TokenSelectorConfig,  # config for this instance\n    ids:TokenSelectorHtmlIds,    # HTML IDs\n) -&gt; str:  # JS code fragment for the IIFE\n    \"Generate display update and hidden input sync JS functions.\"\n\n\n\nHTML IDs (html_ids.ipynb)\n\nPrefix-based HTML ID generator for token selector DOM elements.\n\n\nImport\nfrom cjm_fasthtml_token_selector.core.html_ids import (\n    TokenSelectorHtmlIds\n)\n\n\nClasses\n@dataclass\nclass TokenSelectorHtmlIds:\n    \"Prefix-based HTML ID generator for token selector DOM elements.\"\n    \n    prefix: str  # unique instance prefix\n    \n    def container(self) -&gt; str:  # outer wrapper ID\n            \"\"\"Outer token selector wrapper.\"\"\"\n            return f\"{self.prefix}-token-selector\"\n    \n        @property\n        def token_grid(self) -&gt; str:  # flex-wrap token container ID\n        \"Outer token selector wrapper.\"\n    \n    def token_grid(self) -&gt; str:  # flex-wrap token container ID\n            \"\"\"Flex-wrap token container.\"\"\"\n            return f\"{self.prefix}-token-grid\"\n    \n        @property\n        def anchor_input(self) -&gt; str:  # hidden input ID for anchor position\n        \"Flex-wrap token container.\"\n    \n    def anchor_input(self) -&gt; str:  # hidden input ID for anchor position\n            \"\"\"Hidden input ID for anchor position (hyphenated, for CSS selectors).\"\"\"\n            return f\"{self.prefix}-anchor\"\n    \n        @property\n        def focus_input(self) -&gt; str:  # hidden input ID for focus position\n        \"Hidden input ID for anchor position (hyphenated, for CSS selectors).\"\n    \n    def focus_input(self) -&gt; str:  # hidden input ID for focus position\n            \"\"\"Hidden input ID for focus position (hyphenated, for CSS selectors).\"\"\"\n            return f\"{self.prefix}-focus\"\n    \n        @property\n        def anchor_name(self) -&gt; str:  # form field name for anchor position\n        \"Hidden input ID for focus position (hyphenated, for CSS selectors).\"\n    \n    def anchor_name(self) -&gt; str:  # form field name for anchor position\n            \"\"\"Form field name for anchor position (underscored, for Python kwargs).\"\"\"\n            return f\"{self.prefix}_anchor\"\n    \n        @property\n        def focus_name(self) -&gt; str:  # form field name for focus position\n        \"Form field name for anchor position (underscored, for Python kwargs).\"\n    \n    def focus_name(self) -&gt; str:  # form field name for focus position\n            \"\"\"Form field name for focus position (underscored, for Python kwargs).\"\"\"\n            return f\"{self.prefix}_focus\"\n    \n        def token(self,\n                  index:int,  # token position index\n                 ) -&gt; str:  # individual token span ID\n        \"Form field name for focus position (underscored, for Python kwargs).\"\n    \n    def token(self,\n                  index:int,  # token position index\n                 ) -&gt; str:  # individual token span ID\n        \"Individual token span ID.\"\n\n\n\nInputs (inputs.ipynb)\n\nHidden input rendering for HTMX state sync.\n\n\nImport\nfrom cjm_fasthtml_token_selector.components.inputs import (\n    render_hidden_inputs,\n    build_include_selector\n)\n\n\nFunctions\ndef render_hidden_inputs(\n    ids:TokenSelectorHtmlIds,                   # HTML IDs for this instance\n    state:Optional[TokenSelectorState] = None,  # current state\n    oob:bool = False,                           # render with hx-swap-oob\n) -&gt; Any:  # tuple of anchor and focus hidden inputs\n    \"Render hidden inputs for HTMX form submission.\"\ndef build_include_selector(\n    ids:TokenSelectorHtmlIds,  # HTML IDs for this instance\n) -&gt; str:  # CSS selector string for hx_include\n    \"Build a CSS selector for including anchor and focus inputs in HTMX requests.\"\n\n\n\nModels (models.ipynb)\n\nData models for tokens, render context, and mutable runtime state.\n\n\nImport\nfrom cjm_fasthtml_token_selector.core.models import (\n    Token,\n    TokenRenderContext,\n    TokenSelectorState\n)\n\n\nClasses\n@dataclass\nclass Token:\n    \"A single token in the token grid.\"\n    \n    text: str  # the token text content\n    index: int  # 0-based position in the token list\n    metadata: Any  # optional consumer metadata per token\n@dataclass\nclass TokenRenderContext:\n    \"Context passed to per-token styling callbacks.\"\n    \n    token: Token  # the token being rendered\n    is_selected: bool  # whether this token is in the current selection\n    is_anchor: bool  # whether this token is at the anchor position\n    is_focus: bool  # whether this token is at the focus position\n    selection_mode: str  # current selection mode\n@dataclass\nclass TokenSelectorState:\n    \"Mutable runtime state for a token selector instance.\"\n    \n    anchor: int = 0  # anchor position (gap index or token index)\n    focus: int = 0  # focus position (same as anchor in gap/word mode)\n    word_count: int = 0  # total number of tokens\n    active: bool = False  # whether the key repeat engine is active\n\n\n\nNavigation JS (navigation.ipynb)\n\nGenerates mode-specific navigation and selection JS functions.\n\n\nImport\nfrom cjm_fasthtml_token_selector.js.navigation import (\n    generate_navigation_js\n)\n\n\nFunctions\ndef _generate_gap_nav_js(\n    config:TokenSelectorConfig,  # config for this instance\n    ids:TokenSelectorHtmlIds,    # HTML IDs\n) -&gt; str:  # JS code fragment\n    \"Generate gap mode navigation functions.\"\ndef _generate_word_nav_js(\n    config:TokenSelectorConfig,  # config for this instance\n    ids:TokenSelectorHtmlIds,    # HTML IDs\n) -&gt; str:  # JS code fragment\n    \"Generate word mode navigation functions.\"\ndef _generate_span_nav_js(\n    config:TokenSelectorConfig,  # config for this instance\n    ids:TokenSelectorHtmlIds,    # HTML IDs\n) -&gt; str:  # JS code fragment\n    \"Generate span mode navigation functions.\"\ndef generate_navigation_js(\n    config:TokenSelectorConfig,  # config for this instance\n    ids:TokenSelectorHtmlIds,    # HTML IDs\n) -&gt; str:  # JS code fragment for the IIFE\n    \"Generate mode-specific navigation and selection JS functions.\"\n\n\n\nKey Repeat JS (repeat.ipynb)\n\nCustom key repeat engine with configurable initial delay, repeat interval, and throttle floor.\n\n\nImport\nfrom cjm_fasthtml_token_selector.js.repeat import (\n    generate_key_repeat_js\n)\n\n\nFunctions\ndef _generate_movement_dispatch_js(\n    config:TokenSelectorConfig,  # config for this instance\n) -&gt; str:  # JS code fragment for the movement dispatcher\n    \"Generate the key-to-movement dispatch logic.\"\ndef generate_key_repeat_js(\n    config:TokenSelectorConfig,  # config with timing settings\n) -&gt; str:  # JS code fragment for the IIFE\n    \"Generate the custom key repeat engine JS.\"\n\n\n\nTokenizer (tokenizer.ipynb)\n\nTokenization utilities for splitting text into tokens and converting between token indices and character positions.\n\n\nImport\nfrom cjm_fasthtml_token_selector.helpers.tokenizer import (\n    count_tokens,\n    get_token_list,\n    token_index_to_char_position,\n    tokenize\n)\n\n\nFunctions\ndef count_tokens(\n    text:str,  # text to count tokens in\n) -&gt; int:  # token count\n    \"Count the number of whitespace-delimited tokens in text.\"\ndef get_token_list(\n    text:str,  # text to split into tokens\n) -&gt; List[str]:  # list of token strings\n    \"Split text into a list of whitespace-delimited tokens.\"\ndef token_index_to_char_position(\n    text:str,         # full text string\n    token_index:int,  # 0-based token index\n) -&gt; int:  # character position for split\n    \"Convert a token index to the character position where a split should occur.\"\ndef tokenize(\n    text_or_tokens:Union[str, List[str]],  # raw text string or pre-tokenized list\n    metadata:Optional[List[Any]] = None,   # per-token metadata (must match token count)\n) -&gt; List[Token]:  # list of Token objects\n    \"Convert text or a pre-tokenized list into Token objects.\"\n\n\n\nTokens (tokens.ipynb)\n\nToken grid rendering for all three selection modes (gap, word, span).\n\n\nImport\nfrom cjm_fasthtml_token_selector.components.tokens import (\n    render_token,\n    render_end_token,\n    render_token_grid\n)\n\n\nFunctions\ndef _is_token_selected(\n    index:int,              # token index\n    mode:str,               # selection mode\n    anchor:int,             # anchor position\n    focus:int,              # focus position\n) -&gt; bool:  # whether the token is in the selection\n    \"Check if a token at the given index is within the current selection.\"\ndef _build_token_render_context(\n    token:Token,                    # token being rendered\n    mode:str,                       # selection mode\n    anchor:int,                     # anchor position\n    focus:int,                      # focus position\n) -&gt; TokenRenderContext:  # render context for styling callback\n    \"Build a render context for the per-token styling callback.\"\ndef _render_caret_indicator() -&gt; Any:  # caret indicator Div element\n    \"Render the pulsing caret indicator bar.\"\ndef render_token(\n    token:Token,                                      # token to render\n    config:TokenSelectorConfig,                       # config for this instance\n    ids:TokenSelectorHtmlIds,                         # HTML IDs\n    state:Optional[TokenSelectorState] = None,        # current state for highlighting\n    style_callback:Optional[Callable] = None,         # (TokenRenderContext) -&gt; str for extra CSS\n    read_only:bool = False,                           # disable interaction\n) -&gt; Any:  # Span element for this token\n    \"Render a single interactive word token.\"\ndef render_end_token(\n    config:TokenSelectorConfig,                 # config for this instance\n    ids:TokenSelectorHtmlIds,                   # HTML IDs\n    state:Optional[TokenSelectorState] = None,  # current state\n    read_only:bool = False,                     # disable interaction\n) -&gt; Any:  # end sentinel Span element\n    \"Render the end-of-text sentinel token.\"\ndef render_token_grid(\n    tokens:List[Token],                               # token list to render\n    config:TokenSelectorConfig,                       # config for this instance\n    ids:TokenSelectorHtmlIds,                         # HTML IDs\n    state:Optional[TokenSelectorState] = None,        # current state for highlighting\n    style_callback:Optional[Callable] = None,         # (TokenRenderContext) -&gt; str for extra CSS\n    read_only:bool = False,                           # disable all interaction\n) -&gt; Any:  # Div containing the complete token grid\n    \"Render the full interactive token grid.\"",
+    "crumbs": [
+      "cjm-fasthtml-token-selector"
+    ]
+  },
+  {
+    "objectID": "js/repeat.html",
+    "href": "js/repeat.html",
+    "title": "Key Repeat JS",
+    "section": "",
+    "text": "generate_key_repeat_js\n\ndef generate_key_repeat_js(\n    config:TokenSelectorConfig, # config with timing settings\n)-&gt;str: # JS code fragment for the IIFE\n\nGenerate the custom key repeat engine JS.\n\nfrom cjm_fasthtml_token_selector.core.config import TokenSelectorConfig, _reset_prefix_counter\n\n_reset_prefix_counter()\n\n# Default timing\ncfg = TokenSelectorConfig(prefix=\"t\")\njs = generate_key_repeat_js(cfg)\nassert \"ns._handleKeyDown\" in js\nassert \"ns._handleKeyUp\" in js\nassert \"ns._repeatTimer\" in js\nassert str(cfg.initial_delay) in js\nassert str(cfg.repeat_interval) in js\nassert str(cfg.throttle_floor) in js\nassert \"ArrowLeft\" in js\nassert \"ArrowRight\" in js\nprint(\"Default key repeat JS generated!\")\n\n# Custom keys\ncfg_wasd = TokenSelectorConfig(prefix=\"tw\", left_key=\"a\", right_key=\"d\")\njs_wasd = generate_key_repeat_js(cfg_wasd)\nassert \"'a'\" in js_wasd\nassert \"'d'\" in js_wasd\nprint(\"WASD key repeat JS generated!\")\n\n# Span mode includes shift dispatch\ncfg_span = TokenSelectorConfig(prefix=\"ts\", selection_mode=\"span\")\njs_span = generate_key_repeat_js(cfg_span)\nassert \"ns.extendLeft\" in js_span\nassert \"ns.extendRight\" in js_span\nprint(\"Span mode key repeat JS generated!\")\n\n# Custom timing\ncfg_fast = TokenSelectorConfig(prefix=\"tf\", initial_delay=100, repeat_interval=30, throttle_floor=20)\njs_fast = generate_key_repeat_js(cfg_fast)\nassert \"100\" in js_fast\nassert \"30\" in js_fast\nassert \"20\" in js_fast\nprint(\"Custom timing key repeat JS generated!\")\n\n_reset_prefix_counter()\nprint(\"All key repeat JS tests passed!\")\n\nDefault key repeat JS generated!\nWASD key repeat JS generated!\nSpan mode key repeat JS generated!\nCustom timing key repeat JS generated!\nAll key repeat JS tests passed!",
+    "crumbs": [
+      "js",
+      "Key Repeat JS"
+    ]
+  },
+  {
+    "objectID": "js/navigation.html",
+    "href": "js/navigation.html",
+    "title": "Navigation JS",
+    "section": "",
+    "text": "def generate_navigation_js(\n    config:TokenSelectorConfig, # config for this instance\n    ids:TokenSelectorHtmlIds, # HTML IDs\n)-&gt;str: # JS code fragment for the IIFE\n\nGenerate mode-specific navigation and selection JS functions.\n\nfrom cjm_fasthtml_token_selector.core.config import TokenSelectorConfig, _reset_prefix_counter\nfrom cjm_fasthtml_token_selector.core.html_ids import TokenSelectorHtmlIds\n\n_reset_prefix_counter()\n\n# Gap mode\ncfg = TokenSelectorConfig(prefix=\"t\", selection_mode=\"gap\")\nids = TokenSelectorHtmlIds(prefix=\"t\")\njs = generate_navigation_js(cfg, ids)\nassert \"ns.moveLeft\" in js\nassert \"ns.moveRight\" in js\nassert \"ns.selectGap\" in js\nassert \"ns.moveToFirst\" in js\nassert \"ns.moveToLast\" in js\nprint(\"Gap mode navigation JS generated!\")\n\n# Word mode\ncfg_w = TokenSelectorConfig(prefix=\"tw\", selection_mode=\"word\")\njs_w = generate_navigation_js(cfg_w, ids)\nassert \"ns.selectWord\" in js_w\nprint(\"Word mode navigation JS generated!\")\n\n# Span mode\ncfg_s = TokenSelectorConfig(prefix=\"ts\", selection_mode=\"span\")\njs_s = generate_navigation_js(cfg_s, ids)\nassert \"ns.extendLeft\" in js_s\nassert \"ns.extendRight\" in js_s\nassert \"ns.selectToken\" in js_s\nprint(\"Span mode navigation JS generated!\")\n\n_reset_prefix_counter()\nprint(\"All navigation JS tests passed!\")\n\nGap mode navigation JS generated!\nWord mode navigation JS generated!\nSpan mode navigation JS generated!\nAll navigation JS tests passed!",
+    "crumbs": [
+      "js",
+      "Navigation JS"
+    ]
+  },
+  {
+    "objectID": "js/navigation.html#public-api",
+    "href": "js/navigation.html#public-api",
+    "title": "Navigation JS",
+    "section": "",
+    "text": "def generate_navigation_js(\n    config:TokenSelectorConfig, # config for this instance\n    ids:TokenSelectorHtmlIds, # HTML IDs\n)-&gt;str: # JS code fragment for the IIFE\n\nGenerate mode-specific navigation and selection JS functions.\n\nfrom cjm_fasthtml_token_selector.core.config import TokenSelectorConfig, _reset_prefix_counter\nfrom cjm_fasthtml_token_selector.core.html_ids import TokenSelectorHtmlIds\n\n_reset_prefix_counter()\n\n# Gap mode\ncfg = TokenSelectorConfig(prefix=\"t\", selection_mode=\"gap\")\nids = TokenSelectorHtmlIds(prefix=\"t\")\njs = generate_navigation_js(cfg, ids)\nassert \"ns.moveLeft\" in js\nassert \"ns.moveRight\" in js\nassert \"ns.selectGap\" in js\nassert \"ns.moveToFirst\" in js\nassert \"ns.moveToLast\" in js\nprint(\"Gap mode navigation JS generated!\")\n\n# Word mode\ncfg_w = TokenSelectorConfig(prefix=\"tw\", selection_mode=\"word\")\njs_w = generate_navigation_js(cfg_w, ids)\nassert \"ns.selectWord\" in js_w\nprint(\"Word mode navigation JS generated!\")\n\n# Span mode\ncfg_s = TokenSelectorConfig(prefix=\"ts\", selection_mode=\"span\")\njs_s = generate_navigation_js(cfg_s, ids)\nassert \"ns.extendLeft\" in js_s\nassert \"ns.extendRight\" in js_s\nassert \"ns.selectToken\" in js_s\nprint(\"Span mode navigation JS generated!\")\n\n_reset_prefix_counter()\nprint(\"All navigation JS tests passed!\")\n\nGap mode navigation JS generated!\nWord mode navigation JS generated!\nSpan mode navigation JS generated!\nAll navigation JS tests passed!",
+    "crumbs": [
+      "js",
+      "Navigation JS"
+    ]
+  }
+]
