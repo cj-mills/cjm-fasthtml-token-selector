@@ -25,6 +25,6 @@ cjm_fasthtml_token_selector = "cjm_fasthtml_token_selector._modidx:d"
 version = {attr = "cjm_fasthtml_token_selector.__version__"}
 
 [tool.setuptools.packages.find]
-include = ["cjm_fasthtml_token_selector"]
+include = ["cjm_fasthtml_token_selector*"]
 
 [tool.nbdev]
