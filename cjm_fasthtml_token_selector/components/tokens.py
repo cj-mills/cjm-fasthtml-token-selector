@@ -139,6 +139,8 @@ def render_token(
 # %% ../../nbs/components/tokens.ipynb #91bd40f4
 from cjm_fasthtml_daisyui.utilities.semantic_colors import text_dui
 
+from cjm_fasthtml_design_system.text_tiers import text_tiers
+
 # %% ../../nbs/components/tokens.ipynb #efb4515f
 def render_end_token(
     config:TokenSelectorConfig,                 # config for this instance
@@ -163,7 +165,7 @@ def render_end_token(
     cls_parts = [
         "token", position.relative,
         p.x(1), p.y(0.5),
-        text_dui.base_content.opacity(30),
+        text_tiers.subtle,
         cursor.pointer, select.none,
     ]
     if not is_read_only:
