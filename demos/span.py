@@ -8,6 +8,8 @@ from cjm_fasthtml_tailwind.utilities.typography import font_size, font_weight
 from cjm_fasthtml_tailwind.utilities.borders import rounded
 from cjm_fasthtml_tailwind.core.base import combine_classes
 
+from cjm_fasthtml_keyboard_navigation.core.actions import KeyAction
+
 from cjm_fasthtml_token_selector.core.config import TokenSelectorConfig
 from cjm_fasthtml_token_selector.core.html_ids import TokenSelectorHtmlIds
 from cjm_fasthtml_token_selector.core.models import TokenSelectorState
@@ -81,12 +83,25 @@ def setup(route_prefix="/span"):
             "Select a range of words for annotation. "
             "Use Shift+Arrow to extend the selection from the anchor."
         ),
-        keyboard_hints=[
-            "Enter \u2014 Activate token select mode",
-            "Left/Right \u2014 Move to a word (resets anchor)",
-            "Shift+Left/Right \u2014 Extend selection from anchor",
-            "Home/End \u2014 Jump to first/last word",
-            "Enter/Space \u2014 Confirm selected span",
-            "Escape \u2014 Cancel selection",
-        ],
+        # Span mode supports Shift+Left/Right for anchor-anchored selection
+        # extension (handled client-side by the token-selector's shift-extend
+        # engine). Documentation-only KeyActions surface these in the modal
+        # WITHOUT firing any library-side handler \u2014 prevent_default=False so
+        # the client-side handler receives the keydown events unaltered.
+        extra_actions=(
+            KeyAction.documentation_only(
+                key="ArrowLeft",
+                modifiers=frozenset({"shift"}),
+                description="Extend selection left",
+                mode_names=(MODE_NAME,),
+                hint_group="Token Select",
+            ),
+            KeyAction.documentation_only(
+                key="ArrowRight",
+                modifiers=frozenset({"shift"}),
+                description="Extend selection right",
+                mode_names=(MODE_NAME,),
+                hint_group="Token Select",
+            ),
+        ),
     )

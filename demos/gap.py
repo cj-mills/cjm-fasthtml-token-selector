@@ -83,11 +83,9 @@ def setup(route_prefix="/gap"):
             "Place a caret between words to define a split point. "
             "The pulsing indicator shows the current gap position."
         ),
-        keyboard_hints=[
-            "Enter \u2014 Activate token select mode",
-            "Left/Right \u2014 Move caret between words",
-            "Home/End \u2014 Jump to first/last position",
-            "Enter/Space \u2014 Confirm split position",
-            "Escape \u2014 Cancel selection",
-        ],
+        # No extra KeyActions beyond what create_token_nav_actions emits \u2014 all
+        # gap-mode shortcuts (Enter activate, Left/Right caret, Home/End,
+        # Enter/Space confirm, Escape cancel) surface in the keyboard-hints
+        # modal via the library's registered + documentation-only KeyActions.
+        extra_actions=(),
     )

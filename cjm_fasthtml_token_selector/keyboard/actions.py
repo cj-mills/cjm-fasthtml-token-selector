@@ -45,8 +45,17 @@ def create_token_nav_actions(
     mode_name:str = "token-select",       # mode name (must match the mode)
     confirm_button_id:str = "",           # HTMX button ID for confirm action
     cancel_button_id:str = "",            # HTMX button ID for cancel action
-) -> Tuple[KeyAction, ...]:  # non-movement keyboard actions
-    """Create keyboard actions for the token selector."""
+) -> Tuple[KeyAction, ...]:  # non-movement keyboard actions + documentation-only movement
+    """Create keyboard actions for the token selector.
+
+    Includes:
+    - **Handler-firing actions**: Confirm (Enter), Cancel (Escape), Home, End.
+      These use `htmx_trigger` or `js_callback` to invoke the corresponding behavior.
+    - **Documentation-only actions**: ArrowLeft/ArrowRight for caret movement.
+      These appear in the hints modal but fire NO handler — caret movement is
+      handled client-side by the token-selector's key repeat engine. Requires
+      `cjm-fasthtml-keyboard-navigation` 0.0.22+ for `KeyAction.documentation_only`.
+    """
     actions = []
     mode_scope = (mode_name,)
 
@@ -103,6 +112,27 @@ def create_token_nav_actions(
         description="Go to end",
         hint_group="Token Select",
         zone_ids=(zone_id,),
+    ))
+
+    # Documentation-only ArrowLeft/ArrowRight: the token selector's own key
+    # repeat engine handles caret movement client-side. These KeyActions exist
+    # purely to surface the bindings in the keyboard-hints modal. Because
+    # `documentation_only` sets prevent_default=False and the JS dispatcher
+    # short-circuits to NOT_HANDLED, the client-side handler receives the
+    # events unaltered.
+    actions.append(KeyAction.documentation_only(
+        key="ArrowLeft",
+        description="Move caret left",
+        mode_names=mode_scope,
+        zone_ids=(zone_id,),
+        hint_group="Token Select",
+    ))
+    actions.append(KeyAction.documentation_only(
+        key="ArrowRight",
+        description="Move caret right",
+        mode_names=mode_scope,
+        zone_ids=(zone_id,),
+        hint_group="Token Select",
     ))
 
     return tuple(actions)

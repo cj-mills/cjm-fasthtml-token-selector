@@ -51,28 +51,28 @@ graph LR
 
     components_inputs --> core_models
     components_inputs --> core_html_ids
-    components_tokens --> core_constants
     components_tokens --> core_models
+    components_tokens --> core_constants
+    components_tokens --> helpers_tokenizer
     components_tokens --> core_config
     components_tokens --> core_html_ids
-    components_tokens --> helpers_tokenizer
     core_config --> core_constants
     helpers_tokenizer --> core_models
-    js_core --> js_display
+    js_core --> js_navigation
     js_core --> core_models
     js_core --> core_html_ids
-    js_core --> core_config
+    js_core --> js_display
     js_core --> js_repeat
-    js_core --> js_navigation
+    js_core --> core_config
     js_display --> core_constants
     js_display --> core_html_ids
     js_display --> core_config
-    js_navigation --> core_config
     js_navigation --> core_html_ids
+    js_navigation --> core_config
     js_repeat --> core_config
     keyboard_actions --> core_html_ids
-    keyboard_actions --> core_config
     keyboard_actions --> js_core
+    keyboard_actions --> core_config
 ```
 
 *24 cross-module dependencies detected*
@@ -121,8 +121,18 @@ def create_token_nav_actions(
     mode_name:str = "token-select",       # mode name (must match the mode)
     confirm_button_id:str = "",           # HTMX button ID for confirm action
     cancel_button_id:str = "",            # HTMX button ID for cancel action
-) -> Tuple[KeyAction, ...]:  # non-movement keyboard actions
-    "Create keyboard actions for the token selector."
+) -> Tuple[KeyAction, ...]:  # non-movement keyboard actions + documentation-only movement
+    """
+    Create keyboard actions for the token selector.
+    
+    Includes:
+    - **Handler-firing actions**: Confirm (Enter), Cancel (Escape), Home, End.
+      These use `htmx_trigger` or `js_callback` to invoke the corresponding behavior.
+    - **Documentation-only actions**: ArrowLeft/ArrowRight for caret movement.
+      These appear in the hints modal but fire NO handler — caret movement is
+      handled client-side by the token-selector's key repeat engine. Requires
+      `cjm-fasthtml-keyboard-navigation` 0.0.22+ for `KeyAction.documentation_only`.
+    """
 ```
 
 ``` python

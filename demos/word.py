@@ -78,11 +78,8 @@ def setup(route_prefix="/word"):
             "Select individual words by highlighting them. "
             "Good for tagging or marking specific tokens."
         ),
-        keyboard_hints=[
-            "Enter \u2014 Activate token select mode",
-            "Left/Right \u2014 Move highlight between words",
-            "Home/End \u2014 Jump to first/last word",
-            "Enter/Space \u2014 Confirm selected word",
-            "Escape \u2014 Cancel selection",
-        ],
+        # No extra KeyActions beyond what create_token_nav_actions emits \u2014 all
+        # word-mode shortcuts surface via the library's registered +
+        # documentation-only KeyActions in the keyboard-hints modal.
+        extra_actions=(),
     )

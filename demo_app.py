@@ -71,7 +71,7 @@ def main():
     shared_keys = (
         'title', 'description', 'config', 'ids', 'tokens', 'state',
         'mode_name', 'confirm_btn_id', 'cancel_btn_id',
-        'confirm_url', 'cancel_url', 'result_id', 'keyboard_hints',
+        'confirm_url', 'cancel_url', 'result_id', 'extra_actions',
     )
     gap_page = render_demo_page(**{k: gap_cfg[k] for k in shared_keys})
     word_page = render_demo_page(**{k: word_cfg[k] for k in shared_keys})
