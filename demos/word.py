@@ -1,6 +1,7 @@
 """Word mode demo: single word selection for tagging."""
 
-from fasthtml.common import APIRouter, Div, P, Span
+from fasthtml.common import Div, P, Span
+from cjm_fasthtml_app_core.core.routing import APIRouter
 
 from cjm_fasthtml_daisyui.utilities.semantic_colors import bg_dui, text_dui
 from cjm_fasthtml_tailwind.utilities.spacing import p, m
